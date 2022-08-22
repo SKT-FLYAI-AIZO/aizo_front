@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Dimensions } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -66,7 +67,7 @@ export default function App() {
             textAlign: 'center',
             justifyContent: 'center',
             backgroundColor:'#FFFFFF',
-            height: 60,
+            height: Dimensions.get('window').height * 0.09,
           }
         })}
         initialRouteName="Calendar"
