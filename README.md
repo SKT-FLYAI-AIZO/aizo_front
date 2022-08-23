@@ -7,3 +7,4 @@
 * react-native-vector-icons
 * expo-av
 * expo-camera
+* react-native-table-component

@@ -7,6 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import ListScreen from './screens/ListScreen';
 import RecordScreen from './screens/RecordScreen';
 import SettingScreen from './screens/SettingScreen';
+import VideoScreen from './screens/VideoScreen';
 import { theme } from './styles/theme';
 
 const DiaryStack = createStackNavigator();
@@ -17,6 +18,7 @@ function ListStackScreen() {
   return (
     <DiaryStack.Navigator>
       <DiaryStack.Screen name="ListScreen" component={ListScreen} options={{ headerShown: false }} />
+      <DiaryStack.Screen name="VideoScreen" component={VideoScreen} />
     </DiaryStack.Navigator>
   );
 }
