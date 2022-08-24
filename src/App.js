@@ -8,6 +8,7 @@ import ListScreen from './screens/ListScreen';
 import RecordScreen from './screens/RecordScreen';
 import SettingScreen from './screens/SettingScreen';
 import VideoScreen from './screens/VideoScreen';
+import NoticeScreen from './screens/NoticeScreen';
 import SplashScreen from './screens/SplashScreen';
 import InitialScreen from './screens/InitialScreen';
 import LoginScreen from './screens/LoginScreen';
@@ -24,7 +25,8 @@ function ListStackScreen() {
   return (
     <ListStack.Navigator>
       <ListStack.Screen name="ListScreen" component={ListScreen} options={{ headerShown: false }} />
-      <ListStack.Screen name="VideoScreen" component={VideoScreen} />
+      <ListStack.Screen name="VideoScreen" component={VideoScreen} options={{headerShown:false}}/>
+      <ListStack.Screen name="NoticeScreen" component={NoticeScreen} options={{headerShown:false}}/>
     </ListStack.Navigator>
   );
 }
@@ -33,6 +35,7 @@ function RecordStackScreen()  {
   return (
     <RecordStack.Navigator>
       <RecordStack.Screen name="RecordScreen" component={RecordScreen} options={{ headerShown: false }} />
+      <RecordStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }} />
     </RecordStack.Navigator>
   );
 }
@@ -41,6 +44,7 @@ function SettingStackScreen()  {
   return (
     <SettingStack.Navigator>
       <SettingStack.Screen name="SettingScreen" component={SettingScreen} options={{ headerShown: false }} />
+      <SettingStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }} />
     </SettingStack.Navigator>
   );
 }

@@ -1,33 +1,8 @@
-// import React from 'react';
-// import { StyleSheet, Text, View } from 'react-native';
-
-// export default function App() {
-//   return (
-//     <View style={styles.container}>
-//       <Text>
-//         ListScreen
-//       </Text>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#FFFFFF',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
-
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Button  } from 'react-native';
 import { Table, TableWrapper, Row, Cell } from 'react-native-table-component';
-// import { NavigationContainer } from "@react-navigation/native";
-// import { createStackNavigator } from "@react-navigation/stack";
-
-
-// import VideoScreen from '../screens/VideoScreen';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { theme } from '../styles/theme';
 
 const state = {
   tableHead: ['이름', '발생일', '발생위치', '다운로드'],
@@ -40,11 +15,17 @@ const state = {
 }
 
 const element = (navigation) => (
-      <Button
-      title="아이콘"
-      onPress={() => navigation.push('VideoScreen')}
-      color='black'
-    />
+    <TouchableOpacity
+            style={{
+              backgroundColor:'white',
+              margin: 10,
+              borderRaduis: 50,
+              alignItems:'center'
+            }}
+            onPress={() => navigation.push('VideoScreen')}
+        >
+        <Ionicons name="cloud-download" size={30} color='gray'/>
+    </TouchableOpacity>
 );
 
 
@@ -52,8 +33,8 @@ export default function App({navigation}) {
   return (
     <View style={styles.container}>
       <View style={styles.noticeBar}>
-        <TouchableOpacity>
-          <Text style={styles.btnNotice}>알림</Text>
+        <TouchableOpacity onPress={()=>navigation.push('NoticeScreen')}>
+          <Ionicons name='notifications' size={35} color={theme.purple}/>
         </TouchableOpacity>
       </View>
 
@@ -93,9 +74,10 @@ const styles = StyleSheet.create({
 
   noticeBar:{
     flex: 1,
-    backgroundColor: 'green',
+    backgroundColor: 'white',
     alignItems: "flex-end",
     justifyContent: "flex-end",
+    marginHorizontal:40
   },
 
   btnNotice:{
