@@ -3,7 +3,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import 'react-native-gesture-handler';
 import Loader from '../components/Loader';
 import { theme } from '../styles/theme';
-import {StyleSheet, View, Text, TouchableOpacity, TextInput, Keyboard} from 'react-native';
+import {StyleSheet, View, Text, Image, TouchableOpacity, TextInput, Keyboard} from 'react-native';
 
 const RegisterScreen = ({navigation}) => {
     const preURL = require('../preURL');
@@ -18,7 +18,6 @@ const RegisterScreen = ({navigation}) => {
     const emailInputRef = createRef();
     const passwordInputRef = createRef();
     const PasswordcheckInputRef = createRef();
-
 
     const handleSubmitPress = () => {
         setErrortext('');
@@ -50,35 +49,35 @@ const RegisterScreen = ({navigation}) => {
                 name: Name,
                 password: Password,
               }),
+          }).then((response) => response.json())
+          .then((response) => { 
+              setLoading(false)
+              console.log(Object.values(response)[0] === "Account Created!")
+              if(Object.values(response)[0] === "Account Created!"){
+                navigation.goBack()
+                alert('회원 가입이 완료되었습니다.')
+              } else if(Object.values(response)[0][0] === "account의 email은/는 이미 존재합니다."){
+                setErrortext('이미 가입된 이메일입니다.')
+              }
+          }) 
+          .catch((err) => {
+              console.log("error", err) 
           })
-          .then((response) => {
-                console.log(response)
-                setLoading(false);
-                if (response.ok) {
-                    navigation.goBack()
-                }  else{
-                    setErrortext('회원가입 오류');
-                }
-          })
-            .catch((error) => {
-              //Hide Loader
-              setLoading(false);
-              console.error(error);
-            });
-        };
+        }
 
     return (
-        <View style={styles.container}>
+        <View style={containerstyles.container}>
         <Loader loading={loading} />
-        <View style={styles.topArea}>
-            <Text style={styles.TextRegister1}>
-                회원가입
-            </Text>
+        <View style={containerstyles.topArea}>
+            <Image
+            source={require('../assets/images/Register.png')}
+            style={{width: wp(45), resizeMode: 'contain'}}
+          />
         </View>
 
-        <View style={styles.formArea}>
+        <View style={containerstyles.formArea}>
             <TextInput
-            style={styles.textFormTop}
+            style={textformstyle(2 ,1, 7, 0).style}
             placeholder={'이메일'}
             onChangeText={(Email) => setEmail(Email)}
             ref={emailInputRef}
@@ -89,7 +88,7 @@ const RegisterScreen = ({navigation}) => {
             blurOnSubmit={false}
             />
             <TextInput
-            style={styles.textFormMiddle}
+            style={textformstyle(1 ,1, 0, 0).style}
             placeholder={'이름'}
             onChangeText={(Name) => setName(Name)}
             ref={nameInputRef}
@@ -100,7 +99,7 @@ const RegisterScreen = ({navigation}) => {
             blurOnSubmit={false}
             />
             <TextInput
-            style={styles.textFormMiddle}
+            style={textformstyle(1 ,1, 0, 0).style}
             secureTextEntry={true}
             placeholder={'비밀번호(8자 이상)'}
             onChangeText={(Password) => setPassword(Password)}
@@ -112,7 +111,7 @@ const RegisterScreen = ({navigation}) => {
             blurOnSubmit={false}
             />
             <TextInput
-            style={styles.textFormBottom}
+            style={textformstyle(1, 2, 0, 7).style}
             secureTextEntry={true}
             placeholder={'비밀번호 확인'}
             onChangeText={(Passwordcheck) =>
@@ -124,84 +123,77 @@ const RegisterScreen = ({navigation}) => {
             blurOnSubmit={false}
             />
             {errortext != '' ? (
-            <Text style={styles.TextValidation}> {errortext}</Text>
+            <Text style={textstyle.style}> {errortext}</Text>
             ) : null}
 
         </View>   
-        <View style={{flex: 0.75}}>
-            <View style={styles.btnArea}>
+        <View style={{flex: 2}}>
+            <View style={containerstyles.btnArea}>
             <TouchableOpacity style={styles.btn} onPress={handleSubmitPress}>
                 <Text style={{color: 'white', fontSize: wp('4%')}}>회원가입</Text>
             </TouchableOpacity>
             </View>
         </View>
-        <View style={{flex: 3}} />
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const containerstyles =  StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1, 
     flexDirection: 'column',
     backgroundColor: 'white',
     paddingLeft: wp(7),
     paddingRight: wp(7),
   },
   topArea: {
-    flex: 1,
-    paddingTop: wp(2),
-  },
-  alertArea: {
-    height: wp(150),
-  },
-  Text: {
-    fontSize: wp(4),
-  },
-  TextValidation: {
-    fontSize: wp('4%'),
-    color: 'red',
+    flex: 0.8,
+    justifyContent: 'center',
+    paddingTop: wp(15),
   },
   formArea: {
-    flex: 2.5,
-  },
-
-  textFormTop: {
-    borderWidth: 2,
-    borderBottomWidth: 1,
-    borderColor: theme.purple,
-    borderTopLeftRadius: 7,
-    borderTopRightRadius: 7,
-    width: '100%',
-    height: hp(6),
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  textFormMiddle: {
-    borderWidth: 2,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: theme.purple,
-    width: '100%',
-    height: hp(6),
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  textFormBottom: {
-    borderWidth: 2,
-    borderTopWidth: 1,
-    borderColor: theme.purple,
-    borderBottomRightRadius: 7,
-    borderBottomLeftRadius: 7,
-    width: '100%',
-    height: hp(6),
-    paddingLeft: 10,
-    paddingRight: 10,
+    flex: 1.6,
   },
   btnArea: {
     height: hp(8),
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingBottom: hp(1.5),
   },
+  btncontainer: {
+    alignItems: 'flex-end',
+  },
+  btncontainer2: {
+    flexDirection: 'row',
+  }
+});
+
+const textstyle = StyleSheet.create({
+  style: {
+    fontSize: wp('4%'),
+    color: theme.red,
+    paddingTop: wp(3),
+  }
+})
+
+const textformstyle = (TopWidth, BottomWidth, TopRadius, BottomRadius) => StyleSheet.create({
+  style: {
+    borderWidth: 2,
+    borderBottomWidth: BottomWidth,
+    borderTopWidth: TopWidth,
+    borderColor: theme.purple,
+    borderTopLeftRadius: TopRadius,
+    borderTopRightRadius: TopRadius,
+    borderBottomRightRadius: BottomRadius,
+    borderBottomLeftRadius: BottomRadius,
+    width: '100%',
+    height: hp(7),
+    paddingLeft: 10,
+    paddingRight: 10,
+  }
+})
+
+const styles = StyleSheet.create({
   btn: {
     flex: 1,
     width: '100%',
@@ -209,21 +201,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: theme.purple,
-  },
-  inputIOS: {
-    borderWidth: 2,
-    borderTopWidth: 1,
-    borderColor: theme.purple,
-    borderBottomRightRadius: 7,
-    borderBottomLeftRadius: 7,
-    width: '100%',
-    height: hp(6),
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  scrollContainer: {
-    flex: 1,
-    paddingHorizontal: 15,
   },
 });
 

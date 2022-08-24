@@ -9,11 +9,6 @@ export default function App({navigation}) {
   const [status, setStatus] = React.useState({});
   return (
     <View style={styles.container}>
-        <View style={styles.noticeBar}>
-        <TouchableOpacity onPress={()=>navigation.push('NoticeScreen')}>
-          <Ionicons name='notifications' size={35} color={theme.purple}/>
-        </TouchableOpacity>
-      </View>
         <View style={{flex:1, padding:35}}>
             <View style={styles.videoBox}>
                 <View style={{flex:0.5,flexDirection:'row'}}>
@@ -69,7 +64,7 @@ export default function App({navigation}) {
 const styles = StyleSheet.create({
   container:{
     flex: 1,
-    backgroundColor: "#F8FAFB",
+    backgroundColor: "#fff",
   },
   noticeBar:{
     marginTop:30,

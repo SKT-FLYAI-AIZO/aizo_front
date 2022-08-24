@@ -32,12 +32,6 @@ const element = (navigation) => (
 export default function App({navigation}) {
   return (
     <View style={styles.container}>
-      <View style={styles.noticeBar}>
-        <TouchableOpacity onPress={()=>navigation.push('NoticeScreen')}>
-          <Ionicons name='notifications' size={35} color={theme.purple}/>
-        </TouchableOpacity>
-      </View>
-
       <View style={styles.titlebox}>
         <Text style={styles.title}>끼어들기 감지 영상 목록</Text>
       </View>

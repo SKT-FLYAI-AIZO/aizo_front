@@ -9,11 +9,6 @@ import { theme } from '../styles/theme';
 export default function App({navigation}) {
   return (
     <View style={styles.container}>
-      <View style={styles.iconview}>
-        <TouchableOpacity style={styles.button} onPress={()=>navigation.push('NoticeScreen')}>
-          <Ionicons name='notifications' size={35} color={theme.purple}/>
-        </TouchableOpacity>
-      </View>
       <View style={styles.title}>
         <Text style={ {fontSize:35,}} >설정</Text>
       </View>
@@ -56,7 +51,7 @@ const styles = StyleSheet.create({
     width:'100%',
   },
   title:{
-    flex:1,
+    flex:3,
     backgroundColor:'#fff',
     alignItems: 'center',
     justifyContent: 'center',

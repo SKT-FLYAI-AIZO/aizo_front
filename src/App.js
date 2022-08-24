@@ -1,18 +1,19 @@
 import * as React from 'react';
-import { Dimensions } from 'react-native';
+import {StyleSheet, Dimensions, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import ListScreen from './screens/ListScreen';
-import RecordScreen from './screens/RecordScreen';
-import SettingScreen from './screens/SettingScreen';
-import VideoScreen from './screens/VideoScreen';
 import NoticeScreen from './screens/NoticeScreen';
 import SplashScreen from './screens/SplashScreen';
 import InitialScreen from './screens/InitialScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import RecordScreen from './screens/RecordScreen';
+import ListScreen from './screens/ListScreen';
+import VideoScreen from './screens/VideoScreen';
+import SettingScreen from './screens/SettingScreen';
+import NoticeScreen from './screens/NoticeScreen';
 import { theme } from './styles/theme';
 
 const Stack = createStackNavigator();
@@ -24,9 +25,50 @@ const Tab = createBottomTabNavigator();
 function ListStackScreen() {
   return (
     <ListStack.Navigator>
-      <ListStack.Screen name="ListScreen" component={ListScreen} options={{ headerShown: false }} />
-      <ListStack.Screen name="VideoScreen" component={VideoScreen} options={{headerShown:false}}/>
-      <ListStack.Screen name="NoticeScreen" component={NoticeScreen} options={{headerShown:false}}/>
+      <ListStack.Screen name="ListScreen" component={ListScreen} options={{
+          title: '',
+          headerLeft: null,
+          headerTransparent: true,
+          headerStyle: {
+            height: Dimensions.get('window').width * 0.3
+          },
+          headerRight: () => (
+            <View style={styles.badgeIconView}>
+              <View style={styles.badge} />
+              <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
+            </View>
+            ),
+        }} />
+        <ListStack.Screen name="VideoScreen" component={VideoScreen} options={{
+          title: '',
+          headerLeft: null,
+          headerTransparent: true,
+          headerStyle: {
+            height: Dimensions.get('window').width * 0.3
+          },
+          headerRight: () => (
+            <View style={styles.badgeIconView}>
+              <View style={styles.badge} />
+              <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
+            </View>
+            ),
+        }} 
+        />
+      <ListStack.Screen name="NoticeScreen" component={NoticeScreen} options={{
+          title: '',
+          headerLeft: null,
+          headerTransparent: true,
+          headerStyle: {
+            height: Dimensions.get('window').width * 0.3
+          },
+          headerRight: () => (
+            <View style={styles.badgeIconView}>
+              <View style={styles.badge} />
+              <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
+            </View>
+            ),
+        }} 
+        />
     </ListStack.Navigator>
   );
 }
@@ -43,8 +85,35 @@ function RecordStackScreen()  {
 function SettingStackScreen()  {
   return (
     <SettingStack.Navigator>
-      <SettingStack.Screen name="SettingScreen" component={SettingScreen} options={{ headerShown: false }} />
-      <SettingStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }} />
+      <SettingStack.Screen name="SettingScreen" component={SettingScreen} options={{
+          headerTransparent: true,
+          title: '',
+          headerLeft: null,
+          headerStyle: {
+            height: Dimensions.get('window').width * 0.3
+          },
+          headerRight: () => (
+            <View style={styles.badgeIconView}>
+              <View style={styles.badge} />
+              <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
+            </View>
+            ),
+        }} />
+      <SettingStack.Screen name="NoticeScreen" component={NoticeScreen} options={{
+          headerTransparent: true,
+          title: '',
+          headerLeft: null,
+          headerStyle: {
+            height: Dimensions.get('window').width * 0.3
+          },
+          headerRight: () => (
+            <View style={styles.badgeIconView}>
+              <View style={styles.badge} />
+              <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
+            </View>
+            ),
+        }} 
+        />
     </SettingStack.Navigator>
   );
 }
@@ -65,8 +134,6 @@ const MainTabScreen = ({navigation, route}) => {
             }else{
               iconName = focused ? 'videocam' : 'videocam-outline';
             }
-
-            // You can return any component that you like here!
             return <Ionicons name={iconName} size={35} color={color} />;
           },
           tabBarActiveTintColor: theme.purple,
@@ -79,9 +146,8 @@ const MainTabScreen = ({navigation, route}) => {
             height: Dimensions.get('window').height * 0.09,
           }
         })}
-        initialRouteName="Calendar"
+        initialRouteName="목록"
         >
-
           <Tab.Screen name="촬영" component={RecordStackScreen} options={{ headerShown: false }}/>
           <Tab.Screen name="목록" component={ListStackScreen} options={{ headerShown: false }}/>
           <Tab.Screen name="설정" component={SettingStackScreen} options={{ headerShown: false }}/>
@@ -102,6 +168,7 @@ function Auth() {
         component={LoginScreen}
         options={{
           title: '',
+          headerTransparent: true,
           headerBackTitleVisible: false,
         }}
       />
@@ -110,6 +177,7 @@ function Auth() {
         component={RegisterScreen}
         options={{
           title: '',
+          headerTransparent: true,
           headerBackTitleVisible: false,
         }}
       />
@@ -140,3 +208,20 @@ export default function App() {
     </NavigationContainer>
   );
 };
+const styles = StyleSheet.create({
+badgeIconView:{
+  position:'relative',
+  padding:20
+},
+badge:{
+  color:'#fff',
+  position:'absolute',
+  zIndex:10,
+  top: 18,
+  right: 20,
+  borderRadius: (Dimensions.get('window').width * 0.02)/ 2,
+  height: Dimensions.get('window').width * 0.02,
+  width: Dimensions.get('window').width * 0.02,
+  backgroundColor: theme.yellow,
+}
+});
