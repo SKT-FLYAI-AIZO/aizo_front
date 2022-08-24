@@ -49,7 +49,8 @@ export default function App() {
 
   if (video) {
     let shareVideo = () => {
-      var body = new FormData();
+      // 08.24 영상 보내기 작업 중
+      /*var body = new FormData();
       // location 버리기
       body.append('email', AsyncStorage.getItem('Email'))
       body.append('video_file', video)
@@ -69,7 +70,7 @@ export default function App() {
       }) 
       .catch((err) => {
           console.log("error", err) 
-      })
+      })*/
         setVideo(undefined);
       }
 

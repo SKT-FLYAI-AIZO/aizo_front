@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Button  } from 'react-native';
 import { Table, TableWrapper, Row, Cell } from 'react-native-table-component';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { theme } from '../styles/theme';
 
 const state = {
   tableHead: ['이름', '발생일', '발생위치', '다운로드'],
@@ -51,7 +51,6 @@ export default function App({navigation}) {
             ))
           }
         </Table>
-        
       </View>
     </View>
   );
@@ -66,23 +65,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
 
-  noticeBar:{
-    flex: 1,
-    backgroundColor: 'white',
-    alignItems: "flex-end",
-    justifyContent: "flex-end",
-    marginHorizontal:40
-  },
-
-  btnNotice:{
-    fontSize:30,
-    color: '#fff',
-    backgroundColor: '#000',
-  },
-
   titlebox:{
-    flex: 1,
-    justifyContent: "center",
+    flex: 1.9,
+    justifyContent: "flex-end",
     alignItems: "center",
   },
 
@@ -92,10 +77,10 @@ const styles = StyleSheet.create({
   },
 
   databox:{
-    flex: 6,
+    flex: 8,
     backgroundColor: "#fff",
     borderWidth: 1,
-    margin:40
+    margin: wp(7),
   },
 
   data: {
