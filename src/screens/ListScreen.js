@@ -52,7 +52,7 @@ export default function App({navigation}) {
   return (
     <View style={styles.container}>
       <View style={styles.noticeBar}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.push('NoticeScreen')}>
           <Text style={styles.btnNotice}>알림</Text>
         </TouchableOpacity>
       </View>

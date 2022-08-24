@@ -1,13 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, StatusBar, } from 'react-native';
 import symbolicateStackTrace from 'react-native/Libraries/Core/Devtools/symbolicateStackTrace';
 
 
-export default function App() {
+export default function App({navigation}) {
   return (
     <View style={styles.container}>
       <View style={styles.iconview}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={()=>navigation.push('NoticeScreen')}>
           <Text>알림버튼</Text>
         </TouchableOpacity>
       </View>
