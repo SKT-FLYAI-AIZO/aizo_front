@@ -19,8 +19,8 @@ function ListStackScreen() {
   return (
     <DiaryStack.Navigator>
       <DiaryStack.Screen name="ListScreen" component={ListScreen} options={{ headerShown: false }} />
-      <DiaryStack.Screen name="VideoScreen" component={VideoScreen}/>
-      <DiaryStack.Screen name="NoticeScreen" component={NoticeScreen}/> 
+      <DiaryStack.Screen name="VideoScreen" component={VideoScreen} options={{headerShown:false}}/>
+      <DiaryStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }}/> 
     </DiaryStack.Navigator>
   );
 }
@@ -29,7 +29,7 @@ function RecordStackScreen()  {
   return (
     <SettingsStack.Navigator>
       <SettingsStack.Screen name="RecordScreen" component={RecordScreen} options={{ headerShown: false }} />
-      <SettingsStack.Screen name="NoticeScreen" component={NoticeScreen}/>
+      <SettingsStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }}/>
     </SettingsStack.Navigator>
   );
 }
@@ -38,7 +38,7 @@ function SettingStackScreen()  {
   return (
     <StatisticsStack.Navigator>
       <StatisticsStack.Screen name="SettingScreen" component={SettingScreen} options={{ headerShown: false }} />
-      <StatisticsStack.Screen name="NoticeScreen" component={NoticeScreen}/>
+      <StatisticsStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }}/>
     </StatisticsStack.Navigator>
   );
 }

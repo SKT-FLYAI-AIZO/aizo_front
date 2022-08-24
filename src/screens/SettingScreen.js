@@ -1,6 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, StatusBar, } from 'react-native';
 import symbolicateStackTrace from 'react-native/Libraries/Core/Devtools/symbolicateStackTrace';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { theme } from '../styles/theme';
+
 
 
 export default function App({navigation}) {
@@ -8,7 +11,7 @@ export default function App({navigation}) {
     <View style={styles.container}>
       <View style={styles.iconview}>
         <TouchableOpacity style={styles.button} onPress={()=>navigation.push('NoticeScreen')}>
-          <Text>알림버튼</Text>
+          <Ionicons name='notifications' size={35} color={theme.purple}/>
         </TouchableOpacity>
       </View>
       <View style={styles.title}>
@@ -20,7 +23,8 @@ export default function App({navigation}) {
             계정
           </Text> 
         </TouchableOpacity>
-        <TouchableOpacity style={styles.btn}>
+        <TouchableOpacity style={styles.btn} 
+        onPress={()=>navigation.push('NoticeScreen')}>
           <Text style={styles.notice}>
             알림
           </Text> 
@@ -45,7 +49,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   iconview:{
-    flex:1,
+    flex:1.5,
     backgroundColor:'#fff',
     justifyContent: "center",
     alignItems:'flex-end',
@@ -65,16 +69,19 @@ const styles = StyleSheet.create({
     margin:30
   },
   account:{
-    fontSize:35,
-    color:'#333',
+    fontSize:30,
+    color:'#222',
+    marginVertical:5
   },
   notice:{
-    fontSize:35,
-    color:'#333',
+    fontSize:30,
+    color:'#222',
+    marginVertical:5
   },
   withdrawal:{
-    fontSize:35,
-    color:'#333',
+    fontSize:30,
+    color:'#222',
+    marginVertical:5
   },
   btn:{
     borderBottomWidth:2,
@@ -82,7 +89,8 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: "center",
-    backgroundColor: "#DDDDDD",
-    padding: 10
+    backgroundColor: "#fff",
+    padding: 10,
+    marginHorizontal:30
   },
 });
