@@ -9,45 +9,48 @@ import RecordScreen from './screens/RecordScreen';
 import SettingScreen from './screens/SettingScreen';
 import VideoScreen from './screens/VideoScreen';
 import NoticeScreen from './screens/NoticeScreen';
+import SplashScreen from './screens/SplashScreen';
+import InitialScreen from './screens/InitialScreen';
+import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
 import { theme } from './styles/theme';
 
-const DiaryStack = createStackNavigator();
-const SettingsStack = createStackNavigator();
-const StatisticsStack = createStackNavigator();
+const Stack = createStackNavigator();
+const ListStack = createStackNavigator();
+const RecordStack = createStackNavigator();
+const SettingStack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 function ListStackScreen() {
   return (
-    <DiaryStack.Navigator>
-      <DiaryStack.Screen name="ListScreen" component={ListScreen} options={{ headerShown: false }} />
-      <DiaryStack.Screen name="VideoScreen" component={VideoScreen} options={{headerShown:false}}/>
-      <DiaryStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }}/> 
-    </DiaryStack.Navigator>
+    <ListStack.Navigator>
+      <ListStack.Screen name="ListScreen" component={ListScreen} options={{ headerShown: false }} />
+      <ListStack.Screen name="VideoScreen" component={VideoScreen} options={{headerShown:false}}/>
+      <ListStack.Screen name="NoticeScreen" component={NoticeScreen} options={{headerShown:false}}/>
+    </ListStack.Navigator>
   );
 }
 
 function RecordStackScreen()  {
   return (
-    <SettingsStack.Navigator>
-      <SettingsStack.Screen name="RecordScreen" component={RecordScreen} options={{ headerShown: false }} />
-      <SettingsStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }}/>
-    </SettingsStack.Navigator>
+    <RecordStack.Navigator>
+      <RecordStack.Screen name="RecordScreen" component={RecordScreen} options={{ headerShown: false }} />
+      <RecordStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }} />
+    </RecordStack.Navigator>
   );
 }
 
 function SettingStackScreen()  {
   return (
-    <StatisticsStack.Navigator>
-      <StatisticsStack.Screen name="SettingScreen" component={SettingScreen} options={{ headerShown: false }} />
-      <StatisticsStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }}/>
-    </StatisticsStack.Navigator>
+    <SettingStack.Navigator>
+      <SettingStack.Screen name="SettingScreen" component={SettingScreen} options={{ headerShown: false }} />
+      <SettingStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }} />
+    </SettingStack.Navigator>
   );
 }
 
-const Tab = createBottomTabNavigator();
-
-export default function App() {
+const MainTabScreen = ({navigation, route}) => {
   return (
-    <NavigationContainer>
       <Tab.Navigator 
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
@@ -83,6 +86,57 @@ export default function App() {
           <Tab.Screen name="목록" component={ListStackScreen} options={{ headerShown: false }}/>
           <Tab.Screen name="설정" component={SettingStackScreen} options={{ headerShown: false }}/>
       </Tab.Navigator>
-    </NavigationContainer>
   );
 }
+
+function Auth() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="InitialScreen"
+        component={InitialScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="LoginScreen"
+        component={LoginScreen}
+        options={{
+          title: '',
+          headerBackTitleVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="RegisterScreen"
+        component={RegisterScreen}
+        options={{
+          title: '',
+          headerBackTitleVisible: false,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+export default function App() {
+  return (
+    <NavigationContainer independent={true}>
+        <Stack.Navigator initialRouteName="SplashScreen">
+        <Stack.Screen
+          name="SplashScreen"
+          component={SplashScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Auth"
+          component={Auth}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="MainTab"
+          component={MainTabScreen}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};

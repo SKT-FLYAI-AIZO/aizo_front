@@ -2,8 +2,11 @@ export const theme = {
     // default
     white: '#ffffff',
     black: '#000000',
-    red: '#A10035',
-
+    grey: '#cfcbcb',
     // Purple
-    purple: '#5b6388'
+    purple: '#5b6388',
+    // yellow
+    yellow: '#ffca0c',
+    // red
+    red: '#A10035'
 }
