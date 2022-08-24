@@ -7,13 +7,7 @@ export default function App() {
   const [status, setStatus] = React.useState({});
   return (
     <View style={styles.container}>
-        <View style={{alignItems:'flex-end', backgroundColor:'#fff'}}>
-                <Button 
-                title='알림'
-                onPress={() => {}}
-                color='purple'
-                />
-        </View>
+      <View style={{flex: 0.2}}/>
         <View style={styles.videoBox}>
             <View style={{flexDirection:'row'}}>
             <TouchableOpacity>
@@ -65,7 +59,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container:{
     flex: 1,
-    backgroundColor: "#F8FAFB",
+    backgroundColor: "#fff",
   },
   videoBox:{
     flex:1,

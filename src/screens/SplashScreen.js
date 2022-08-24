@@ -15,7 +15,7 @@ const SplashScreen = ({navigation}) => {
   useEffect(() => {
     setTimeout(() => {
       setAnimating(false);
-      AsyncStorage.getItem('user_id').then((value) =>
+      AsyncStorage.getItem('mail').then((value) =>
         navigation.replace(value === null ? 'Auth' : 'MainTab'),
       );
     }, 3000);

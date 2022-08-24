@@ -51,12 +51,6 @@ const element = (navigation) => (
 export default function App({navigation}) {
   return (
     <View style={styles.container}>
-      <View style={styles.noticeBar}>
-        <TouchableOpacity>
-          <Text style={styles.btnNotice}>알림</Text>
-        </TouchableOpacity>
-      </View>
-
       <View style={styles.titlebox}>
         <Text style={styles.title}>끼어들기 감지 영상 목록</Text>
       </View>

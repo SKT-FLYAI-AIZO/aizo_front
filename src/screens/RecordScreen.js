@@ -32,7 +32,6 @@ export default function App() {
     setIsRecording(true);
     let options = {
       quality: "1080p",
-      maxDuration: 60,
       mute: true
     };
 
@@ -50,7 +49,27 @@ export default function App() {
 
   if (video) {
     let shareVideo = () => {
-      // blob storage와 연결 필요 (08.22)
+      var body = new FormData();
+      // location 버리기
+      body.append('email', AsyncStorage.getItem('Email'))
+      body.append('video_file', video)
+      body.append('loc_file', location)
+      body.append('date', date.now()) // 촬영 시작 시간
+      fetch(preURL.preURL + '/storage/video-uploader', {
+        method: 'POST',
+        headers: {
+            'Accept' : "application/json",
+            'Content-Type': 'multipart/form-data',
+            'Authorization': 'Bearer ' + AsyncStorage.getItem('AccessToken'),
+        },
+        body: body,
+      }).then((response) => response.json())
+      .then((response) => { 
+          setLoading(false)
+      }) 
+      .catch((err) => {
+          console.log("error", err) 
+      })
         setVideo(undefined);
       }
 

@@ -2,7 +2,7 @@ import React, { useState, createRef } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import 'react-native-gesture-handler';
 import Loader from '../components/Loader';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput, Keyboard } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Keyboard, Image } from 'react-native';
 import { theme } from '../styles/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -36,39 +36,38 @@ const LoginScreen = ({navigation}) => {
           email: Email,
           password: Password,
         }),
-    })
-      .then((responseJson) => {
-        console.log(responseJson);
-        if (responseJson.status === 200) {
-          AsyncStorage.setItem('Email', Email);
-          setLoading(false);
-          navigation.navigate('MainTab');
-        } else {
-          setErrortext('아이디와 비밀번호를 다시 확인해주세요');
-          setLoading(false);
-          console.log('Please check your id or password');
-        }
+    }).then((response) => response.json())
+      .then((response) => { 
+          setLoading(false)
+          if (Object.values(response)[0] === 'login success'){
+            AsyncStorage.setItem('Email', Email);
+            AsyncStorage.setItem('AccessToken', (Object.values(response)[1].access_token))
+            AsyncStorage.setItem('RefreshToken', (Object.values(response)[1].refresh_token))
+            navigation.navigate('MainTab')
+          } else if(Object.values(response)[0] === "비밀번호를 확인해주세요."){
+            setErrortext(Object.values(response)[0])
+          } else if(Object.values(response)[0] === "존재하지 않는 이메일입니다."){
+            setErrortext(Object.values(response)[0])
+          } 
+      }).catch((err) => {
+          setLoading(false)
+          setErrortext('로그인에 실패했습니다.')
+          console.log("error", Object.values(err)) 
       })
-      .catch((error) => {
-        setLoading(false);
-        console.error(error);
-      });
-  };
+    }
 
   return (
-    <View style={styles.container}>
+    <View style={containerstyles.container}>
       <Loader loading={loading} />
-      <View style={styles.topArea}>
-        <View style={styles.titleArea}>
-        <Text style={styles.TextRegister1}>
-          로그인
-        </Text>
-        </View>
+      <View style={containerstyles.topArea}>
+        <Image
+          source={require('../assets/images/Login.png')}
+          style={{width: wp(35), resizeMode: 'contain'}}
+        />
       </View>
-
-      <View style={styles.formArea}>
+      <View style={containerstyles.formArea}>
         <TextInput
-          style={styles.textFormTop}
+          style={textformstyle(2 ,1, 7, 0).style}
           placeholder={'이메일'}
           onChangeText={(Email) => setEmail(Email)}
           autoCapitalize="none"
@@ -80,7 +79,7 @@ const LoginScreen = ({navigation}) => {
           blurOnSubmit={false}
         />
         <TextInput
-          style={styles.textFormBottom}
+          style={textformstyle(1, 2, 0, 7).style}
           onChangeText={(Password) => setPassword(Password)}
           secureTextEntry={true}
           placeholder={'비밀번호'}
@@ -90,37 +89,35 @@ const LoginScreen = ({navigation}) => {
           onSubmitEditing={Keyboard.dismiss}
           blurOnSubmit={false}
         />
-        <View style={styles.btncontainer2}>
-          <Text style={styles.TextRegister3}>
+        <View style={containerstyles.btncontainer}>
+          <Text style={textstyle(theme.grey, wp('4%'), wp(2), 'none').style}>
             비밀번호 찾기
           </Text>
         </View>
         {errortext != '' ? (
-          <Text style={styles.TextValidation}> {errortext}</Text>
-        ) : null}
+          <Text style={textstyle(theme.red, wp('4%'), wp(2), 'none').style}> {errortext}</Text>
+        ) : ''}
       </View>
-      <View style={{flex: 0.75}}>
-        <View style={styles.btnArea}>
+      <View style={{flex: 2.5}}>
+        <View style={containerstyles.btnArea}>
           <TouchableOpacity style={styles.btn} onPress={handleSubmitPress}>
             <Text style={{color: 'white', fontSize: wp('4%')}}>로그인</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.btncontainer}>
-          <Text style={styles.TextRegister1}> 아직 회원이 아니신가요? </Text>
+        <View style={containerstyles.btncontainer2}>
+          <Text style={textstyle(theme.grey, wp('4%'), wp(2), 'none').style}> 아직 회원이 아니신가요? </Text>
         <Text
-          style={styles.TextRegister2}
+          style={textstyle(theme.black, wp('4%'), wp(2), 'underline').style}
           onPress={() => navigation.navigate('RegisterScreen')}>
           회원가입
         </Text>
         </View>
       </View>
-
-      <View style={{flex: 3}} />
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const containerstyles =  StyleSheet.create({
   container: {
     flex: 1, 
     flexDirection: 'column',
@@ -129,70 +126,12 @@ const styles = StyleSheet.create({
     paddingRight: wp(7),
   },
   topArea: {
-    flex: 1,
-    paddingTop: wp(1),
-  },
-  titleArea: {
-    flex: 0.5,
+    flex: 0.95,
     justifyContent: 'center',
-    paddingTop: wp(3),
-  },
-  TextArea: {
-    flex: 0.3,
-    justifyContent: 'center',
-    backgroundColor: 'white',
-  },
-  Text: {
-    fontSize: wp('4%'),
-    paddingBottom: wp('1%'),
-  },
-  TextValidation: {
-    fontSize: wp('4%'),
-    color: 'red',
-    paddingTop: wp(2),
-  },
-  TextRegister1: {
-    fontSize: wp('4%'),
-    color: 'grey',
-    paddingTop: wp(2),
-  },
-  TextRegister3: {
-    fontSize: wp('4%'),
-    color: 'grey',
-    paddingTop: wp(2),
-  },
-  TextRegister2: {
-    fontSize: wp('4%'),
-    color: 'black',
-    textAlign: 'right',
-    textDecorationLine: 'underline',
-    paddingTop: wp(2),
+    paddingTop: wp(15),
   },
   formArea: {
-    justifyContent: 'center',
-    flex: 1.5,
-  },
-  textFormTop: {
-    borderWidth: 2,
-    borderBottomWidth: 1,
-    borderColor: theme.purple,
-    borderTopLeftRadius: 7,
-    borderTopRightRadius: 7,
-    width: '100%',
-    height: hp(6),
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  textFormBottom: {
-    borderWidth: 2,
-    borderTopWidth: 1,
-    borderColor: theme.purple,
-    borderBottomRightRadius: 7,
-    borderBottomLeftRadius: 7,
-    width: '100%',
-    height: hp(6),
-    paddingLeft: 10,
-    paddingRight: 10,
+    flex: 1.1,
   },
   btnArea: {
     height: hp(8),
@@ -200,6 +139,41 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: hp(1.5),
   },
+  btncontainer: {
+    alignItems: 'flex-end',
+  },
+  btncontainer2: {
+    flexDirection: 'row',
+  }
+});
+
+const textstyle = (color, size, padding, decoration) => StyleSheet.create({
+  style: {
+    fontSize: size,
+    color: color,
+    paddingTop: padding,
+    textDecorationLine: decoration
+  }
+})
+
+const textformstyle = (TopWidth, BottomWidth, TopRadius, BottomRadius) => StyleSheet.create({
+  style: {
+    borderWidth: 2,
+    borderBottomWidth: BottomWidth,
+    borderTopWidth: TopWidth,
+    borderColor: theme.purple,
+    borderTopLeftRadius: TopRadius,
+    borderTopRightRadius: TopRadius,
+    borderBottomRightRadius: BottomRadius,
+    borderBottomLeftRadius: BottomRadius,
+    width: '100%',
+    height: hp(7),
+    paddingLeft: 10,
+    paddingRight: 10,
+  }
+})
+
+const styles = StyleSheet.create({
   btn: {
     flex: 1,
     width: '100%',
@@ -208,11 +182,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: theme.purple,
   },
-  btncontainer: {
-    flexDirection: 'row',
-  },
-  btncontainer2: {
-    alignItems: 'flex-end',
-  }
 });
+
 export default LoginScreen;
