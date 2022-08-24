@@ -43,22 +43,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  iconview:{
-    flex:1.5,
-    backgroundColor:'#fff',
-    justifyContent: "center",
-    alignItems:'flex-end',
-    width:'100%',
-  },
   title:{
-    flex:3,
+    flex:1.9,
     backgroundColor:'#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     width:'100%'
   },
   settingBox:{
-    flex:6,
+    flex:8,
     backgroundColor:'#fff',
     width:'75%',
     margin:30

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import {StyleSheet, Dimensions, View } from 'react-native';
+import {StyleSheet, Dimensions, View, TouchableOpacity} from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import NoticeScreen from './screens/NoticeScreen';
 import SplashScreen from './screens/SplashScreen';
 import InitialScreen from './screens/InitialScreen';
 import LoginScreen from './screens/LoginScreen';
@@ -22,10 +22,10 @@ const RecordStack = createStackNavigator();
 const SettingStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function ListStackScreen() {
+function ListStackScreen(navigation) {
   return (
     <ListStack.Navigator>
-      <ListStack.Screen name="ListScreen" component={ListScreen} options={{
+      <ListStack.Screen name="ListScreen" component={ListScreen} options={({ navigation }) => ({
           title: '',
           headerLeft: null,
           headerTransparent: true,
@@ -33,28 +33,16 @@ function ListStackScreen() {
             height: Dimensions.get('window').width * 0.3
           },
           headerRight: () => (
-            <View style={styles.badgeIconView}>
-              <View style={styles.badge} />
-              <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
-            </View>
-            ),
-        }} />
-        <ListStack.Screen name="VideoScreen" component={VideoScreen} options={{
-          title: '',
-          headerLeft: null,
-          headerTransparent: true,
-          headerStyle: {
-            height: Dimensions.get('window').width * 0.3
-          },
-          headerRight: () => (
-            <View style={styles.badgeIconView}>
-              <View style={styles.badge} />
-              <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
-            </View>
-            ),
-        }} 
+            <TouchableOpacity onPress={() => navigation.navigate('NoticeScreen')}>
+              <View style={styles.badgeIconView}>
+                <View style={styles.badge} />
+                <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
+              </View>
+            </TouchableOpacity>  
+          ),
+        })}
         />
-      <ListStack.Screen name="NoticeScreen" component={NoticeScreen} options={{
+        <ListStack.Screen name="VideoScreen" component={VideoScreen} options={({ navigation }) => ({
           title: '',
           headerLeft: null,
           headerTransparent: true,
@@ -62,13 +50,16 @@ function ListStackScreen() {
             height: Dimensions.get('window').width * 0.3
           },
           headerRight: () => (
-            <View style={styles.badgeIconView}>
-              <View style={styles.badge} />
-              <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
-            </View>
-            ),
-        }} 
+            <TouchableOpacity onPress={() => navigation.navigate('NoticeScreen')}>
+              <View style={styles.badgeIconView}>
+                <View style={styles.badge} />
+                <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
+              </View>
+            </TouchableOpacity>  
+          ),
+        })}
         />
+      <ListStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }} />
     </ListStack.Navigator>
   );
 }
@@ -85,35 +76,24 @@ function RecordStackScreen()  {
 function SettingStackScreen()  {
   return (
     <SettingStack.Navigator>
-      <SettingStack.Screen name="SettingScreen" component={SettingScreen} options={{
+      <SettingStack.Screen name="SettingScreen" component={SettingScreen} options={({ navigation }) => ({
           headerTransparent: true,
           title: '',
           headerLeft: null,
           headerStyle: {
             height: Dimensions.get('window').width * 0.3
           },
-          headerRight: () => (
-            <View style={styles.badgeIconView}>
-              <View style={styles.badge} />
-              <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
-            </View>
-            ),
-        }} />
-      <SettingStack.Screen name="NoticeScreen" component={NoticeScreen} options={{
-          headerTransparent: true,
-          title: '',
-          headerLeft: null,
-          headerStyle: {
-            height: Dimensions.get('window').width * 0.3
-          },
-          headerRight: () => (
-            <View style={styles.badgeIconView}>
-              <View style={styles.badge} />
-              <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
-            </View>
-            ),
-        }} 
+          headerRight: (s) => (
+            <TouchableOpacity onPress={() => navigation.navigate('NoticeScreen')}>
+              <View style={styles.badgeIconView}>
+                <View style={styles.badge} />
+                <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
+              </View>
+            </TouchableOpacity>  
+          ),
+        })}
         />
+      <SettingStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }}/>
     </SettingStack.Navigator>
   );
 }
@@ -211,14 +191,14 @@ export default function App() {
 const styles = StyleSheet.create({
 badgeIconView:{
   position:'relative',
-  padding:20
+  padding: wp(5)
 },
 badge:{
   color:'#fff',
   position:'absolute',
   zIndex:10,
-  top: 18,
-  right: 20,
+  top: hp(2),
+  right: wp(5),
   borderRadius: (Dimensions.get('window').width * 0.02)/ 2,
   height: Dimensions.get('window').width * 0.02,
   width: Dimensions.get('window').width * 0.02,
