@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import NoticeScreen from './screens/NoticeScreen';
 import SplashScreen from './screens/SplashScreen';
 import InitialScreen from './screens/InitialScreen';
 import LoginScreen from './screens/LoginScreen';
@@ -12,6 +13,7 @@ import RecordScreen from './screens/RecordScreen';
 import ListScreen from './screens/ListScreen';
 import VideoScreen from './screens/VideoScreen';
 import SettingScreen from './screens/SettingScreen';
+import NoticeScreen from './screens/NoticeScreen';
 import { theme } from './styles/theme';
 
 const Stack = createStackNavigator();
@@ -52,6 +54,21 @@ function ListStackScreen() {
             ),
         }} 
         />
+      <ListStack.Screen name="NoticeScreen" component={NoticeScreen} options={{
+          title: '',
+          headerLeft: null,
+          headerTransparent: true,
+          headerStyle: {
+            height: Dimensions.get('window').width * 0.3
+          },
+          headerRight: () => (
+            <View style={styles.badgeIconView}>
+              <View style={styles.badge} />
+              <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
+            </View>
+            ),
+        }} 
+        />
     </ListStack.Navigator>
   );
 }
@@ -60,6 +77,7 @@ function RecordStackScreen()  {
   return (
     <RecordStack.Navigator>
       <RecordStack.Screen name="RecordScreen" component={RecordScreen} options={{ headerShown: false }} />
+      <RecordStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }} />
     </RecordStack.Navigator>
   );
 }
@@ -81,6 +99,21 @@ function SettingStackScreen()  {
             </View>
             ),
         }} />
+      <SettingStack.Screen name="NoticeScreen" component={NoticeScreen} options={{
+          headerTransparent: true,
+          title: '',
+          headerLeft: null,
+          headerStyle: {
+            height: Dimensions.get('window').width * 0.3
+          },
+          headerRight: () => (
+            <View style={styles.badgeIconView}>
+              <View style={styles.badge} />
+              <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
+            </View>
+            ),
+        }} 
+        />
     </SettingStack.Navigator>
   );
 }
@@ -115,7 +148,6 @@ const MainTabScreen = ({navigation, route}) => {
         })}
         initialRouteName="목록"
         >
-
           <Tab.Screen name="촬영" component={RecordStackScreen} options={{ headerShown: false }}/>
           <Tab.Screen name="목록" component={ListStackScreen} options={{ headerShown: false }}/>
           <Tab.Screen name="설정" component={SettingStackScreen} options={{ headerShown: false }}/>
