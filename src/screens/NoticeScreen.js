@@ -9,7 +9,7 @@ export default function App({navigation}) {
         <View style={{flex:1, flexDirection:'row', width:'85%'}}>
             <View style={{flex:1}}/> 
             <View style={{flex:1, justifyContent: "center", alignItems: "center",}}>
-                <Text style={{fontSize:30, width:'50%', alignSelf:'center'}}>알림</Text>
+                <Text style={{fontSize:25 , width:'50%', alignSelf:'center'}}>알림</Text>
             </View>
             <View style={{flex:1}}>    
                 <View style={{flex:1, justifyContent:'center', alignItems:'flex-end',}}>
@@ -33,21 +33,21 @@ export default function App({navigation}) {
         </View>
         <View style ={{flex:6, backgroundColor: 'white', width:'85%', alignItems:'center'}}>
             <ScrollView style={{width:'100%'}}>
-                <Text style={{fontSize:29, borderBottomWidth:1}}>2022.08.20</Text>
+                <Text style={{fontSize:25, borderBottomWidth:1}}>2022.08.20</Text>
                 <View style={{margin:17}}>
                     <Text style={styles.text}>서울 특별시 동작구...에서 끼어들기</Text>
                     <Text style={styles.text}>차량 탐지 후 영상 목록에 저장</Text>
                 </View>
-                <Text style={{fontSize:30, borderBottomWidth:1}}>2022.08.20</Text>
+                <Text style={{fontSize:25, borderBottomWidth:1}}>2022.08.20</Text>
                 <View style={{margin:17}}>
                     <Text style={styles.text}>서울 특별시 동작구...에서 끼어들기</Text>
                     <Text style={styles.text}>차량 탐지 후 영상 목록에 저장</Text>
-                </View><Text style={{fontSize:30, borderBottomWidth:1}}>2022.08.20</Text>
+                </View><Text style={{fontSize:25, borderBottomWidth:1}}>2022.08.20</Text>
                 <View style={{margin:17}}>
                     <Text style={styles.text}>서울 특별시 동작구...에서 끼어들기</Text>
                     <Text style={styles.text}>차량 탐지 후 영상 목록에 저장</Text>
                 </View>
-                <Text style={{fontSize:29, borderBottomWidth:1}}>2022.08.20</Text>
+                <Text style={{fontSize:25, borderBottomWidth:1}}>2022.08.20</Text>
                 <View style={{margin:17}}>
                     <Text style={styles.text}>서울 특별시 동작구...에서 끼어들기</Text>
                     <Text style={styles.text}>차량 탐지 후 영상 목록에 저장</Text>

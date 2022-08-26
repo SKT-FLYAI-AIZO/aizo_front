@@ -5,11 +5,14 @@ import { Video, AVPlaybackStatus } from 'expo-av';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { theme } from '../styles/theme';
 
-export default function App({navigation}) {
-  const video = React.useRef(null);
+export default function App({navigation, route}) {
+  const video = React.useRef(route.params.path);
   const [status, setStatus] = React.useState({});
   return (
     <View style={styles.container}>
+    <Text>
+        {typeof(route.params.path)}
+    </Text>
       <View style={styles.videoBox}>
           <View style={{flex:0.5,flexDirection:'row'}}>
               <View style={{flex:1, backgroundColor: theme.purple}}>
@@ -34,7 +37,7 @@ export default function App({navigation}) {
               ref={video}
               style={styles.video}
               source={{
-              uri: 'https://flyvideotest.blob.core.windows.net/videostorage/samplevideo.mp4',
+                uri: route.params.path
               }}
               useNativeControls
               resizeMode="contain"
