@@ -10,7 +10,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 const state = {
   tableHead: ['  이름', '발생일', '발생위치', '  다운로드']}
 
-const element = (navigation, cellData) => (
+const element = (navigation, rowData) => (
     <TouchableOpacity
             style={{
               backgroundColor:'white',
@@ -18,7 +18,7 @@ const element = (navigation, cellData) => (
               borderRaduis: 50,
               alignItems:'center'
             }}
-            onPress={() => navigation.push('VideoScreen', {path:cellData})}
+            onPress={() => navigation.push('VideoScreen', {rowData})}
         >
         <Ionicons name="cloud-download" size={30} color='gray'/>
     </TouchableOpacity>
@@ -38,7 +38,7 @@ export default function App({navigation}) {
         const inputData = []
         for (let i = 0; i < len; i++) {
           const title = "영상" + (i + 1);
-          const date = data[i]['date'].slice(5,7) + "." + data[i]['date'].slice(8,10);
+          const date = data[i]['date'].slice(2,4) + '.' + data[i]['date'].slice(5,7) + "." + data[i]['date'].slice(8,10);
           const location = data[i]['location'];
           const path = data[i]['path'];
           inputData.push([title, date, location, path]);
@@ -67,7 +67,7 @@ export default function App({navigation}) {
               <TableWrapper key={index} style={styles.row}>
                 {
                   rowData.map((cellData, cellIndex) => (
-                    <Cell key={cellIndex} data={cellIndex === 3 ? element(navigation, cellData) : cellData} textStyle={styles.text}/>
+                    <Cell key={cellIndex} data={cellIndex === 3 ? element(navigation, rowData) : cellData} textStyle={styles.text}/>
                   ))
                 }
               </TableWrapper>

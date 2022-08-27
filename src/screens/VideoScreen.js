@@ -4,15 +4,34 @@ import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { Video, AVPlaybackStatus } from 'expo-av';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { theme } from '../styles/theme';
+import { useSafeAreaFrame } from 'react-native-safe-area-context';
 
 export default function App({navigation, route}) {
-  const video = React.useRef(route.params.path);
-  const [status, setStatus] = React.useState({});
+  const video = React.useRef(null);
+  //const [status, setStatus] = React.useState({});
+  const [date, setDate] = React.useState('');
+  const [location, setLocation] = React.useState(''); 
+  const [path, setPath] = React.useState('');
+  const preURL = require('../preURL');
+
+
+  React.useEffect(()=>{
+    setDate(route.params.rowData[1]);
+    setLocation(route.params.rowData[2]);
+    setPath(route.params.rowData[3]);
+  })
+  const downloadPress = () => {
+    fetch(preURL.preURL + '/media/file?path=' + path)
+      .then((response) => response.json())
+      .then((response) => { 
+          console.log(response.status);
+      }).catch((err) => {
+          console.log("error", Object.values(err)) 
+      })
+    }
+
   return (
     <View style={styles.container}>
-    <Text>
-        {typeof(route.params.path)}
-    </Text>
       <View style={styles.videoBox}>
           <View style={{flex:0.5,flexDirection:'row'}}>
               <View style={{flex:1, backgroundColor: theme.purple}}>
@@ -28,31 +47,31 @@ export default function App({navigation, route}) {
               <View style={{flex:1, backgroundColor: theme.purple}}/>
           </View>
           <View style={{borderBottomWidth:1, borderColor: 'gray'}}>
-              <Text style={styles.text}>발생일: 2022.08.19</Text>
+              <Text style={styles.text}>발생일: 20{date}</Text>
           </View>
           <View style={{borderBottomWidth:1, borderColor: 'gray'}}>
-              <Text style={styles.text}>발생위치: 서울 동작구...</Text>
+              <Text style={styles.text}>발생위치: {location}</Text>
           </View>
           <Video
               ref={video}
               style={styles.video}
               source={{
-                uri: route.params.path
+                uri: path
               }}
               useNativeControls
               resizeMode="contain"
               isLooping
-              onPlaybackStatusUpdate={status => setStatus(() => status)}
+              //onPlaybackStatusUpdate={status => setStatus(() => status)}
           />
           <View style={styles.btnPlay}>
-              <View style={{flexDirection: 'row', flex:0.5}}>
+              <View style={{flexDirection: 'row', flex:1}}>
                   <View style={{flex:1, borderWidth:1, borderColor:'gray', backgroundColor:'white', justifyContent:'center', alignItems:'center',}}>
                       <TouchableOpacity onPress={()=>{}}>
                           <Ionicons name='trash' size={30} color={theme.black}/>
                       </TouchableOpacity>
                   </View>
                   <View style={{flex:1, backgroundColor:theme.purple, justifyContent:'center', alignItems:'center',}}>
-                      <TouchableOpacity onPress={()=>{}}>
+                      <TouchableOpacity onPress={downloadPress}>
                           <Ionicons name='download' size={30} color={theme.black}/>
                       </TouchableOpacity>
                   </View>
@@ -83,10 +102,10 @@ const styles = StyleSheet.create({
   },
   video:{
     flex: 3,
-    alignSelf: "stretch"
+    alignSelf: "stretch",
   },
   btnPlay:{
-    flex:1,
+    flex:0.5,
     justifyContent:"flex-end"
   },
   btnDelete:{
