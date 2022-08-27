@@ -1,75 +1,157 @@
-import React from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, } from 'react-native';
+import React, { useState, useEffect} from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { theme } from '../styles/theme';
 
 export default function App({navigation}) {
-  return (
-    <View style={styles.container}>
-        <View style={{flex:1, flexDirection:'row', width:'85%'}}>
-            <View style={{flex:1}}/> 
-            <View style={{flex:1, justifyContent: "center", alignItems: "center",}}>
-                <Text style={{fontSize:30, width:'50%', alignSelf:'center'}}>알림</Text>
-            </View>
-            <View style={{flex:1}}>    
-                <View style={{flex:1, justifyContent:'center', alignItems:'flex-end',}}>
-                    <TouchableOpacity onPress={()=>{navigation.goBack(null)}}>
-                        <Ionicons name='close' size={35} color={theme.black}/>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </View>
-        <View style={{flex:0.7, backgroundColor:'white', width:'100%', flexDirection:'row', justifyContent:'flex-end', alignItems:'center', width:'85%'}}>
-            <TouchableOpacity style={{marginHorizontal:10,}} onPress={()=>{}}>
-                <Text style={{fontSize:16, fontWeight:'400', color:'gray'}}>
-                    전체 읽음
-                </Text>
+
+    const data = [
+        {
+            id: "1",
+            read: true,
+            message: "Earnest Green",
+            date: "2022-08-25"
+          },
+          {
+            id: "2",
+            read: true,
+            message: "Winston Orn",
+            date: "2022-08-26"
+          },
+          {
+            id: "3",
+            read: false,
+            message: "Carlton Collins",
+            date: "2022-08-27"
+          },
+          {
+            id: "4",
+            message: "Carlton Collins",
+            date: "2022-08-27"
+          },
+          {
+            id: "5",
+            read: true,
+            message: "Carlton Collins",
+            date: "2022-08-27"
+          },
+          {
+            id: "6",
+            read: false,
+            message: "Carlton Collins",
+            date: "2022-08-27"
+          },
+          {
+            id: "7",
+            read: false,
+            message: "Carlton Collins",
+            date: "2022-08-27"
+          },
+          {
+            id: "8",
+            read: false,
+            message: "Carlton Collins",
+            date: "2022-08-27"
+          },
+          {
+            id: "9",
+            read: false,
+            message: "Carlton Collins",
+            date: "2022-08-27"
+          },
+          {
+            id: "10",
+            read: false,
+            message: "Carlton Collins",
+            date: "2022-08-27"
+          },
+        ]
+
+         useEffect(() => {
+ 
+            setData(Data);
+        
+        }, []);
+
+    const [Data, setData] = useState(data);
+        
+        const re_Render_FlatList = (id) =>{
+            const newdata = Data.map(obj => {
+                if (obj.id === id) {
+                  return {...obj, "read": true};
+                }
+                return obj;
+              });
+        
+            setData(newdata);
+        }
+
+        const readAllFlatList = () =>{
+            const newdata = Data.map(obj => {
+                obj.read = true
+                return obj;
+              });
+        
+            setData(newdata);
+        }
+
+        const DeleteNotification = () =>{
+            setData(null);
+        }
+
+    return (
+        <View style ={{flex:1, paddingTop:hp(10), backgroundColor: '#FFFFFF'}}><View style={styles.container}>
+            <View style={styles.btncontainer}>
+                <TouchableOpacity onPress={readAllFlatList}>
+                <Text style={{fontSize:16, fontWeight:'400', color:theme.purple, textDecorationLine:'underline'}}>전체 읽음</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{marginHorizontal:10}}>
-                <Text style={{fontSize:16, fontWeight:'400', color:theme.purple, textDecorationLine:'underline'}}>
-                    전체 삭제
-                </Text>
+                <TouchableOpacity onPress={DeleteNotification}>
+                <Text style={{fontSize:16, fontWeight:'400', color:theme.purple, textDecorationLine:'underline'}}>전체 삭제</Text>
             </TouchableOpacity>
+            </View>
+            </View>
+            <View style ={{flex:9, backgroundColor: 'white', alignItems:'center', justifyContent: 'center'}}>
+                {Data && <FlatList 
+                    extradata={Data}
+                    contentContainerStyle={{alignItems: 'center', justifyContent: 'center'}}
+                    data={Data}
+                    showsVerticalScrollIndicator ={false}
+                    renderItem={({ item }) => 
+                        <TouchableOpacity onPress={()=>re_Render_FlatList(item.id)} style={{backgroundColor:(item.read === false) ? theme.white : 'rgba(115, 119, 123, 0.2)', width: wp(95), height: hp(10)}}>
+                            <Text style={{color: (item.read === false) ? theme.black : 'grey'}}>{item.date}</Text>
+                            <Text style={{color: (item.read === false) ? theme.black : 'grey'}}>{item.message}</Text>
+                        </TouchableOpacity>}
+                    keyExtractor={(item) => item.id}
+                />}
+                {!Data && <Text>알림 없음</Text>}
+            </View>
         </View>
-        <View style ={{flex:6, backgroundColor: 'white', width:'85%', alignItems:'center'}}>
-            <ScrollView style={{width:'100%'}}>
-                <Text style={{fontSize:29, borderBottomWidth:1}}>2022.08.20</Text>
-                <View style={{margin:17}}>
-                    <Text style={styles.text}>서울 특별시 동작구...에서 끼어들기</Text>
-                    <Text style={styles.text}>차량 탐지 후 영상 목록에 저장</Text>
-                </View>
-                <Text style={{fontSize:30, borderBottomWidth:1}}>2022.08.20</Text>
-                <View style={{margin:17}}>
-                    <Text style={styles.text}>서울 특별시 동작구...에서 끼어들기</Text>
-                    <Text style={styles.text}>차량 탐지 후 영상 목록에 저장</Text>
-                </View><Text style={{fontSize:30, borderBottomWidth:1}}>2022.08.20</Text>
-                <View style={{margin:17}}>
-                    <Text style={styles.text}>서울 특별시 동작구...에서 끼어들기</Text>
-                    <Text style={styles.text}>차량 탐지 후 영상 목록에 저장</Text>
-                </View>
-                <Text style={{fontSize:29, borderBottomWidth:1}}>2022.08.20</Text>
-                <View style={{margin:17}}>
-                    <Text style={styles.text}>서울 특별시 동작구...에서 끼어들기</Text>
-                    <Text style={styles.text}>차량 탐지 후 영상 목록에 저장</Text>
-                </View>
-            </ScrollView>
-        </View>
-    </View>
-  );
+    );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    alignItems: 'center',
+    alignItems: 'flex-end',
+  },
+  btncontainer: {
+    flexDirection: 'row',
+    width: wp(50),
+    marginTop: wp(5),
+    marginBottom: wp(5),
+    justifyContent: 'space-evenly',
   },
 
   text:{
     fontSize:20, 
-    backgroundColor:'white',
-    numberOfLines:2,
+    backgroundColor: 'white'  ,
+  },
+  item: {
+    width: wp(95),
+    height: hp(10),
+    fontSize: 15,
+    marginTop: 5,
   }
-
-
 });

@@ -59,7 +59,23 @@ function ListStackScreen(navigation) {
           ),
         })}
         />
-      <ListStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }} />
+      <ListStack.Screen name="NoticeScreen" component={NoticeScreen} options={({ navigation }) => ({
+          title: '알림',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: wp(7),
+          },
+          headerLeft: null,
+          headerTransparent: true,
+          headerStyle: {
+            height: Dimensions.get('window').width * 0.2
+          },
+          headerRight: () => (
+            <TouchableOpacity onPress={()=> navigation.goBack()}>
+                <Ionicons name="close" size={Dimensions.get('window').width * 0.07} style={{marginRight: wp(5)}}/>
+            </TouchableOpacity>  
+          ),
+        })}/>
     </ListStack.Navigator>
   );
 }
@@ -67,8 +83,35 @@ function ListStackScreen(navigation) {
 function RecordStackScreen()  {
   return (
     <RecordStack.Navigator>
-      <RecordStack.Screen name="RecordScreen" component={RecordScreen} options={{ headerShown: false }} />
-      <RecordStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }} />
+      <RecordStack.Screen name="RecordScreen" component={RecordScreen} options={({ navigation }) => ({
+          title: '',
+          headerLeft: null,
+          headerTransparent: true,
+          headerStyle: {
+            height: Dimensions.get('window').width * 0.3
+          },
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.navigate('NoticeScreen')}>
+                <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
+            </TouchableOpacity>  
+          ),
+        })} />
+      <RecordStack.Screen name="NoticeScreen" component={NoticeScreen} options={({ navigation }) => ({
+          title: '알림',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: wp(7),
+          },
+          headerLeft: null,
+          headerStyle: {
+            height: Dimensions.get('window').width * 0.2
+          },
+          headerRight: () => (
+            <TouchableOpacity onPress={()=> navigation.goBack()}>
+                <Ionicons name="close" size={Dimensions.get('window').width * 0.07} style={{marginRight: wp(5)}}/>
+            </TouchableOpacity>  
+          ),
+        })}/>
     </RecordStack.Navigator>
   );
 }
@@ -93,7 +136,23 @@ function SettingStackScreen()  {
           ),
         })}
         />
-      <SettingStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }}/>
+      <SettingStack.Screen name="NoticeScreen" component={NoticeScreen} options={({ navigation }) => ({
+          title: '알림',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: wp(7),
+          },
+          headerLeft: null,
+          headerTransparent: true,
+          headerStyle: {
+            height: Dimensions.get('window').width * 0.2
+          },
+          headerRight: () => (
+            <TouchableOpacity onPress={()=> navigation.goBack()}>
+                <Ionicons name="close" size={Dimensions.get('window').width * 0.07} style={{marginRight: wp(5)}}/>
+            </TouchableOpacity>  
+          ),
+        })}/>
     </SettingStack.Navigator>
   );
 }
