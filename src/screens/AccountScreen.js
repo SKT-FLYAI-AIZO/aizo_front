@@ -7,7 +7,7 @@ import { theme } from '../styles/theme';
 
 
 
-const App = () => {
+const App = ({navigation}) => {
     const [email, setEmail] = useState('');
 
     useEffect(()=> {
@@ -25,14 +25,11 @@ const App = () => {
             </View>
             <View style={styles.dataBox}>
                 <Text>
-                    메일: {email}
-                </Text>
-                <Text>
-                    이름: 
+                    메일
                 </Text>
                 <TextInput
                     style={textformstyle(2 ,1, 7, 0).style}
-                    // placeholder={'이메일'}
+                    placeholder={email}
                     // //onChangeText={(Email) => setEmail(Email)}
                     // autoCapitalize="none"
                     // returnKeyType="next"
@@ -42,11 +39,14 @@ const App = () => {
                     // underlineColorAndroid="#f000"
                     // blurOnSubmit={false}
                 />
+                <Text>
+                    이름 
+                </Text>
                 <TextInput
                     style={textformstyle(1, 2, 0, 7).style}
                     //onChangeText={(Password) => setPassword(Password)}
                     // secureTextEntry={true}
-                    // placeholder={'비밀번호'}
+                    placeholder={'김성겸'}
                     // returnKeyType="next"
                     // keyboardType="default"
                     // ref={passwordInputRef}
@@ -60,7 +60,8 @@ const App = () => {
                         회원정보 변경
                     </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{flex:1, alignItems:'center'}}>
+                <TouchableOpacity style={{flex:1, alignItems:'center'}}
+                onPress={()=>{navigation.goBack(null)}}>
                     <Text>
                         뒤로가기
                     </Text>

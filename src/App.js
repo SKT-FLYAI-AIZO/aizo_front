@@ -96,7 +96,7 @@ function SettingStackScreen()  {
         })}
         />
       <SettingStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }}/>
-      <SettingStack.Screen name="AccountScreen" component={AccountScreen}/>
+      <SettingStack.Screen name="AccountScreen" component={AccountScreen} options={{ headerShown: false }}/>
     </SettingStack.Navigator>
   );
 }
