@@ -27,9 +27,15 @@ const element = (navigation, rowData) => (
 export default function App({navigation}) {
   const preURL = require('../preURL');
   const [tableData, setTableData] = useState([])
-
+  const [email, setEmail] = useState('');
+  
+  
   useEffect(()=>{
-  fetch(preURL.preURL + '/media/video'+'?email=tester1@naver.com')
+  setEmail(AsyncStorage.getItem('Email', (err, result) => {console.log(result)}));
+  console.log(email);
+  console.log(typeof(String(email)));
+  //setEmail('tester1@naver.com')
+  fetch(preURL.preURL + '/media/video'+'?email='+ email)
       .then(response => response.json())
       .then(response => {
         console.log(response)

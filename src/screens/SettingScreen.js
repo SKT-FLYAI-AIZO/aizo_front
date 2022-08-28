@@ -13,7 +13,8 @@ export default function App({navigation}) {
         <Text style={ {fontSize:35,}} >설정</Text>
       </View>
       <View style={styles.settingBox}>
-        <TouchableOpacity style={styles.btn}>
+        <TouchableOpacity style={styles.btn}
+        onPress={()=>navigation.push('AccountScreen')}>
           <Text style={styles.account}>
             계정
           </Text> 

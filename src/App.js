@@ -14,6 +14,8 @@ import ListScreen from './screens/ListScreen';
 import VideoScreen from './screens/VideoScreen';
 import SettingScreen from './screens/SettingScreen';
 import NoticeScreen from './screens/NoticeScreen';
+import AccountScreen from './screens/AccountScreen';
+
 import { theme } from './styles/theme';
 
 const Stack = createStackNavigator();
@@ -94,6 +96,7 @@ function SettingStackScreen()  {
         })}
         />
       <SettingStack.Screen name="NoticeScreen" component={NoticeScreen} options={{ headerShown: false }}/>
+      <SettingStack.Screen name="AccountScreen" component={AccountScreen}/>
     </SettingStack.Navigator>
   );
 }
