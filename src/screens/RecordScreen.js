@@ -113,6 +113,7 @@ foregroundSubscription =
       "data": gpsSet
     }
     let sendTime = new Date(starttime)
+    console.log(AsyncStorage.getItem('Email'))
     RNFetchBlob.fetch('POST', preURL.preURL + '/storage/video-uploader', {
         'Accept': 'application/json',
         'Content-Type' : 'multipart/form-data',

@@ -16,6 +16,14 @@ const LoginScreen = ({navigation}) => {
 
   const passwordInputRef = React.createRef();
 
+  const storeData = async ()=>{
+    try{
+       await AsyncStorage.setItem("Email", Email)
+    }catch(error){
+        console.log(error)
+    }
+}
+
   const handleSubmitPress = () => {
     setErrortext('')
     if (!Email) {
@@ -41,9 +49,8 @@ const LoginScreen = ({navigation}) => {
       .then((response) => { 
           setLoading(false)
           if (Object.values(response)[0] === 'login success'){
-            AsyncStorage.setItem('Email', Email);
-            AsyncStorage.setItem('AccessToken', (Object.values(response)[1].access_token))
-            AsyncStorage.setItem('RefreshToken', (Object.values(response)[1].refresh_token))
+            navigation.reset({routes: [{name: "Auth"}]})
+            storeData()
             navigation.navigate('MainTab')
           } else if(Object.values(response)[0] === "비밀번호를 확인해주세요."){
             setErrortext(Object.values(response)[0])

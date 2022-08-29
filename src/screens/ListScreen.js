@@ -12,41 +12,49 @@ const state = {
 
   const element = (navigation, rowData) => (
     <TouchableOpacity
-            style={{
-              backgroundColor:'white',
-              margin: 10,
-              borderRaduis: 50,
-              alignItems:'center'
-            }}
-            onPress={() => navigation.push('VideoScreen', {rowData})}
+        style={{
+          backgroundColor:'white',
+          margin: 10,
+          borderRaduis: 50,
+          alignItems:'center'
+        }}
+        onPress={() => navigation.push('VideoScreen', {rowData})}
         >
         <Ionicons name="cloud-download" size={30} color='gray'/>
     </TouchableOpacity>
 );
 
-
 export default function App({navigation}) {
   const preURL = require('../preURL');
   const [tableData, setTableData] = useState([])
 
+  const load = async () => {
+    try {
+      const value = await AsyncStorage.getItem('Email');
+      console.log(value)
+    } catch (e) {
+    }
+  }
+
   useEffect(()=>{
-  fetch(preURL.preURL + '/media/video'+'?email=tester1@naver.com')
-      .then(response => response.json())
-      .then(response => {
-        console.log(response)
-        const data = response.data
-        const len = data.length;
-        const inputData = []
-        for (let i = 0; i < len; i++) {
-          const title = "영상" + (i + 1);
-          const date = data[i]['date'].slice(2,4) + '.' + data[i]['date'].slice(5,7) + "." + data[i]['date'].slice(8,10);
-          const location = data[i]['location'];
-          const path = data[i]['path'];
-          inputData.push([title, date, location, path]);
-        }
-        setTableData(inputData)
-        })
-      .catch(err => console.error(err));
+    load()
+    fetch(preURL.preURL + '/media/video'+'?email=tester1@naver.com')
+        .then(response => response.json())
+        .then(response => {
+          console.log(response)
+          const data = response.data
+          const len = data.length;
+          const inputData = []
+          for (let i = 0; i < len; i++) {
+            const title = "영상" + (i + 1);
+            const date = data[i]['date'].slice(2,4) + '.' + data[i]['date'].slice(5,7) + "." + data[i]['date'].slice(8,10);
+            const location = data[i]['location'];
+            const path = data[i]['path'];
+            inputData.push([title, date, location, path]);
+          }
+          setTableData(inputData)
+          })
+        .catch(err => console.error(err));
   }, [])
   return (
     <View style={styles.container}>

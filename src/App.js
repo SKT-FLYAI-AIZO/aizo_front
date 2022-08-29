@@ -14,6 +14,8 @@ import ListScreen from './screens/ListScreen';
 import VideoScreen from './screens/VideoScreen';
 import SettingScreen from './screens/SettingScreen';
 import NoticeScreen from './screens/NoticeScreen';
+import ChangeNameScreen from './screens/ChangeNameScreen';
+import ChangePwScreen from './screens/ChangePwScreen';
 import { theme } from './styles/theme';
 
 const Stack = createStackNavigator();
@@ -134,6 +136,28 @@ function SettingStackScreen()  {
                 <Ionicons name="close" size={Dimensions.get('window').width * 0.07} style={{marginRight: wp(5)}}/>
             </TouchableOpacity>  
           ),
+        })}/>
+        <SettingStack.Screen name="ChangeNameScreen" component={ChangeNameScreen} options={({ navigation }) => ({
+          title: '이름 변경',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: wp(5),
+          },
+          headerBackTitleVisible: false,
+          headerStyle: {
+            height: Dimensions.get('window').width * 0.15
+          },
+        })}/>
+        <SettingStack.Screen name="ChangePwScreen" component={ChangePwScreen} options={({ navigation }) => ({
+          title: '비밀번호 변경',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: wp(5),
+          },
+          headerBackTitleVisible: false,
+          headerStyle: {
+            height: Dimensions.get('window').width * 0.15
+          },
         })}/>
     </SettingStack.Navigator>
   );
