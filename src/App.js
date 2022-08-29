@@ -97,8 +97,12 @@ function SettingStackScreen()  {
   return (
     <SettingStack.Navigator>
       <SettingStack.Screen name="SettingScreen" component={SettingScreen} options={({ navigation }) => ({
+          title: '설정',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: wp(7),
+          },
           headerTransparent: true,
-          title: '',
           headerLeft: null,
           headerStyle: {
             height: Dimensions.get('window').width * 0.2
@@ -119,6 +123,7 @@ function SettingStackScreen()  {
           headerTitleStyle: {
             fontSize: wp(7),
           },
+          headerBackTitleVisible: false,
           headerLeft: null,
           headerTransparent: true,
           headerStyle: {

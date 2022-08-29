@@ -8,6 +8,7 @@ import { theme } from '../styles/theme';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNFetchBlob from 'rn-fetch-blob'
+import { useIsFocused } from '@react-navigation/native';
 
 let foregroundSubscription = null
 let starttime = 0
@@ -22,6 +23,7 @@ export default function App() {
   const [isCameraReady, setIsCameraReady] = useState(false);
   const [isVideoRecording, setIsVideoRecording] = useState(false);
   const [videoSource, setVideoSource] = useState(null);
+  const isFocused = useIsFocused()
 
   useEffect(() => {
     (async () => {
@@ -204,14 +206,14 @@ foregroundSubscription =
 
   return (
     <SafeAreaView style={styles.container}>
-      <Camera
+      {isFocused &&<Camera
         ref={cameraRef}
         style={styles.container}
         onCameraReady={onCameraReady}
         onMountError={(error) => {
           console.log("cammera error", error);
         }}
-      />
+      />}
       <View style={styles.container}>
         {isVideoRecording && renderVideoRecordIndicator()}
         {videoSource && renderVideoPlayer()}
