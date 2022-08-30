@@ -1,21 +1,64 @@
-import * as React from 'react';
-import { View, StyleSheet, Button, PermissionsAndroid, Text,TouchableOpacity} from 'react-native';
+import React, { useRef, useEffect, useState } from 'react';
+import { View, StyleSheet,Text,TouchableOpacity, PermissionsAndroid, Platform} from 'react-native';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { Video, AVPlaybackStatus } from 'expo-av';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import RNFS from 'react-native-fs';
+import { Video } from 'expo-av';
+import RNFetchBlob from "rn-fetch-blob";
 
 import { theme } from '../styles/theme';
 
 export default function App({navigation, route}) {
-  const video = React.useRef(null);
-  const [date, setDate] = React.useState('');
-  const [location, setLocation] = React.useState(''); 
-  const [path, setPath] = React.useState('');
+  const video = useRef(null);
+  const [date, setDate] = useState('');
+  const [location, setLocation] = useState(''); 
+  const [path, setPath] = useState('');
   const preURL = require('../preURL');
   //const LOCAL_PATH_TO_VIDEO = Platform.OS === 'ios' ? `${RNFS.DocumentDirectoryPath}/${timestamp}.mp4` : `${RNFS.ExternalDirectoryPath}/${timestamp}.mp4`
   
-  React.useEffect(()=>{
+  const checkPermission = async () => {
+    if (Platform.OS === 'ios') {
+      console.log('I dont like ios')
+    } else {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: 'Storage Permission Required',
+            message: 'App needs access to your storage'
+          }
+        )
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('Storage Permission Granted.')
+          //download()
+        } else {
+          alert('Storage Permission Not Granted')
+        } 
+        } catch (err) {
+          console.warn(err);
+        }
+      }
+    }
+    const downloadByRNFB = async (cellData)=>{
+      const { config, fs } = RNFetchBlob
+      let videoDir = fs.dirs.DownloadDir 
+      let options = {
+        fileCache: true,
+        addAndroidDownloads : {
+          useDownloadManager : true, 
+          notification : true,
+          mime: "text/plain",
+          path:  videoDir + `/사고영상.mp4`,
+          description : 'Downloading image.'
+        }
+      }
+
+      await config(options)
+      .fetch('GET', cellData)
+      .then((res) => { 
+        console.log('download Success');
+      }).catch((err) => {console.log(err)})
+    }
+
+  useEffect(()=>{
     setDate(route.params.rowData[1]);
     setLocation(route.params.rowData[2]);
     setPath(route.params.rowData[3]);
@@ -51,7 +94,7 @@ export default function App({navigation, route}) {
               <Text style={styles.text}>발생위치: {location}</Text>
           </View>
           <View style={{flex: 7.6, alignContent:'center', justifyContent:'center'}}>
-            <Video
+            {/* <Video
               ref={video}
               style={styles.video}
               source={{
@@ -59,8 +102,7 @@ export default function App({navigation, route}) {
               }}
               useNativeControls
               resizeMode="contain"
-              isLooping
-          />
+              isLooping/> */}
           </View>
               <View style={{flexDirection: 'row', flex:1}}>
                   <View style={{flex:1, borderWidth:1, borderColor:'gray', backgroundColor:'white', justifyContent:'center', alignItems:'center',}}>
@@ -70,9 +112,10 @@ export default function App({navigation, route}) {
                       </TouchableOpacity>
                   </View>
                   <View style={{flex:1, backgroundColor:theme.purple, justifyContent:'center', alignItems:'center',}}>
-                      <TouchableOpacity onPress={
-                        downloadPress
-                      } 
+                      <TouchableOpacity onPress={()=>{
+                        checkPermission();
+                        downloadByRNFB(path);
+                      }} 
                           hitSlop={{ top: 32, bottom: 32, left: 32, right: 32 }}>
                         <Text style={styles.text1}>다운로드</Text>
                       </TouchableOpacity>
