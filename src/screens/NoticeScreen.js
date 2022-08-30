@@ -1,104 +1,108 @@
 import React, { useState, useEffect} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { theme } from '../styles/theme';
 
 export default function App({navigation}) {
+  const preURL = require('../preURL');
+  const [email, setEmail] = useState('');
+  const [Data, setData] = useState([]);
 
-    const data = [
-        {
-            id: "1",
-            read: true,
-            message: "Earnest Green",
-            date: "2022-08-25"
-          },
-          {
-            id: "2",
-            read: true,
-            message: "Winston Orn",
-            date: "2022-08-26"
-          },
-          {
-            id: "3",
-            read: false,
-            message: "Carlton Collins",
-            date: "2022-08-27"
-          },
-          {
-            id: "4",
-            message: "Carlton Collins",
-            date: "2022-08-27"
-          },
-          {
-            id: "5",
-            read: true,
-            message: "Carlton Collins",
-            date: "2022-08-27"
-          },
-          {
-            id: "6",
-            read: false,
-            message: "Carlton Collins",
-            date: "2022-08-27"
-          },
-          {
-            id: "7",
-            read: false,
-            message: "Carlton Collins",
-            date: "2022-08-27"
-          },
-          {
-            id: "8",
-            read: false,
-            message: "Carlton Collins",
-            date: "2022-08-27"
-          },
-          {
-            id: "9",
-            read: false,
-            message: "Carlton Collins",
-            date: "2022-08-27"
-          },
-          {
-            id: "10",
-            read: false,
-            message: "Carlton Collins",
-            date: "2022-08-27"
-          },
-        ]
+  useEffect(()=>{
+    console.log(typeof(Data))
+    AsyncStorage.getItem('Email', (err, result) => {
+      console.log(result);
+      setEmail(result);
+    });
 
-         useEffect(() => {
- 
-            setData(Data);
-        
-        }, []);
+  fetch(preURL.preURL + '/account/alarm'+'?email='+ email)
+      .then(response => response.json())
+      .then(response => {
+        console.log(Object.values(response))
+        const len = JSON.parse(Object.values(response)[1]).length
+        console.log(JSON.parse(Object.values(response)[1]).length)
+        const inputData = []
+          for (let i = 0; i < len; i++) {
+            const id = i
+            const message_id = JSON.parse(Object.values(response)[1])[i].pk
+            const message = JSON.parse(Object.values(response)[1])[i].fields.content
+            const read = JSON.parse(Object.values(response)[1])[i].fields.is_read
+            inputData.push({"message_id": message_id, "id": id, "read": read, "message": message});
+          }
+          setData(inputData)
+    })
+    .catch(err => console.error(err));
+  }, [])
 
-    const [Data, setData] = useState(data);
-        
-        const re_Render_FlatList = (id) =>{
-            const newdata = Data.map(obj => {
-                if (obj.id === id) {
-                  return {...obj, "read": true};
-                }
-                return obj;
-              });
-        
-            setData(newdata);
-        }
+    const re_Render_FlatList = (id) =>{
+      const newdata = Data.map(obj => {
+          if (obj.id === id) {
+            fetch(preURL.preURL +'/account/alarm', {
+              method: 'PUT',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json;charset=UTF-8'
+              },
+              body: JSON.stringify({
+                  "alarm_id_list" : [obj.message_id],
+              }),
+          }).then((response) => response.json())
+          .then((response) => {  
+              console.log(response)
+          }).catch((err) => {
+              console.log("error", err.text())
+          })
+            return {...obj, "read": true};
+          }
+          return obj;
+        });
+      setData(newdata);
+    }
 
-        const readAllFlatList = () =>{
-            const newdata = Data.map(obj => {
-                obj.read = true
-                return obj;
-              });
-        
-            setData(newdata);
-        }
+    const readAllFlatList = () =>{
+        let all = []
+        const newdata = Data.map(obj => {
+            all.push(obj.message_id)
+            obj.read = true
+            return obj;
+          });
+          fetch(preURL.preURL +'/account/alarm', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify({
+                "alarm_id_list" : all,
+            }),
+        }).then((response) => response.json())
+        .then((response) => {  
+            console.log(response)
+        }).catch((err) => {
+            console.log("error", err)
+        })
+    
+        setData(newdata);
+    }
 
-        const DeleteNotification = () =>{
-            setData(null);
-        }
+    const DeleteNotification = () =>{
+      fetch(preURL.preURL + '/account/alarm?email=' + email,{
+        method: 'DELETE',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json;charset=UTF-8'
+        },
+        }).then((response) => response.json())
+        .then((response) => {  
+          console.log(response.message)
+          if(response.message === `Account email '${email}' deleted!`){
+            setData([]);
+          }
+        }).catch((err) => {
+            console.log("error", err)
+        })
+    }
 
     return (
         <View style ={{flex:1, paddingTop:hp(10), backgroundColor: '#FFFFFF'}}><View style={styles.container}>
@@ -112,7 +116,7 @@ export default function App({navigation}) {
             </View>
             </View>
             <View style ={{flex:9, backgroundColor: 'white', alignItems:'center', justifyContent: 'center'}}>
-                {Data && <FlatList 
+                {!(Object.keys(Data).length === 0) && <FlatList 
                     extradata={Data}
                     contentContainerStyle={{alignItems: 'center', justifyContent: 'center'}}
                     data={Data}
@@ -124,7 +128,7 @@ export default function App({navigation}) {
                         </TouchableOpacity>}
                     keyExtractor={(item) => item.id}
                 />}
-                {!Data && <Text>알림 없음</Text>}
+                {(Object.keys(Data).length === 0) && <Text>알림 없음</Text>}
             </View>
         </View>
     );
@@ -143,7 +147,6 @@ const styles = StyleSheet.create({
     marginBottom: wp(5),
     justifyContent: 'space-evenly',
   },
-
   text:{
     fontSize:20, 
     backgroundColor: 'white'  ,

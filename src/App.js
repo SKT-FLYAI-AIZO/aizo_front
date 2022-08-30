@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import {StyleSheet, Dimensions, View, TouchableOpacity} from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -16,6 +16,7 @@ import SettingScreen from './screens/SettingScreen';
 import NoticeScreen from './screens/NoticeScreen';
 import ChangeNameScreen from './screens/ChangeNameScreen';
 import ChangePwScreen from './screens/ChangePwScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { theme } from './styles/theme';
 
 const Stack = createStackNavigator();
@@ -25,6 +26,20 @@ const SettingStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function ListStackScreen(navigation) {
+  const [Alarm, setAlarm] = useState(false);
+  const preURL = require('./preURL');
+
+  useEffect(()=>{
+    AsyncStorage.getItem('Email', (err, result) => {
+      fetch(preURL.preURL + '/account/is-alarm'+'?email='+ result)
+        .then(response => response.json())
+        .then(response => {
+          console.log(response)
+          setAlarm(response.is_alarm)
+      })
+      .catch(err => console.error(err))
+    });
+  }, [])
   return (
     <ListStack.Navigator>
       <ListStack.Screen name="ListScreen" component={ListScreen} options={({ navigation }) => ({
@@ -37,7 +52,7 @@ function ListStackScreen(navigation) {
           headerRight: () => (
             <TouchableOpacity onPress={() => navigation.navigate('NoticeScreen')}>
               <View style={styles.badgeIconView}>
-                <View style={styles.badge} />
+                {Alarm && <View style={styles.badge} />}
                 <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
               </View>
             </TouchableOpacity>  
@@ -59,7 +74,7 @@ function ListStackScreen(navigation) {
           headerRight: () => (
             <TouchableOpacity onPress={() => navigation.navigate('NoticeScreen')}>
               <View style={styles.badgeIconView}>
-                <View style={styles.badge} />
+              {Alarm && <View style={styles.badge} />}
                 <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07 } color={theme.white} />
               </View>
             </TouchableOpacity>  
@@ -96,6 +111,19 @@ function RecordStackScreen()  {
 }
 
 function SettingStackScreen()  {
+  const [Alarm, setAlarm] = useState(false);
+  const preURL = require('./preURL');
+
+  useEffect(()=>{
+    AsyncStorage.getItem('Email', (err, result) => {
+      fetch(preURL.preURL + '/account/is-alarm'+'?email='+ result)
+        .then(response => response.json())
+        .then(response => {
+          setAlarm(response.is_alarm)
+      })
+      .catch(err => console.error(err))
+    });
+  }, [])
   return (
     <SettingStack.Navigator>
       <SettingStack.Screen name="SettingScreen" component={SettingScreen} options={({ navigation }) => ({
@@ -112,7 +140,7 @@ function SettingStackScreen()  {
           headerRight: (s) => (
             <TouchableOpacity onPress={() => navigation.navigate('NoticeScreen')}>
               <View style={styles.badgeIconView}>
-                <View style={styles.badge} />
+              {Alarm && <View style={styles.badge} />}
                 <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
               </View>
             </TouchableOpacity>  

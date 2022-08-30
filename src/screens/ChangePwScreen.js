@@ -1,17 +1,32 @@
-import React, { useState, createRef } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NavigationHelpersContext } from '@react-navigation/native';
+import React, { useState, useEffect, createRef } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Keyboard} from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { theme } from '../styles/theme';
 
 export default function ChangePWScreen ({navigation}) {
     const preURL = require('../preURL');
+    const [email, setEmail] = useState();
     const [Password, setPassword] = useState('');
     const [Passwordcheck, setPasswordcheck] = useState('');
-    const [loading, setLoading] = useState(false);
     const [errortext, setErrortext] = useState('');
 
     const passwordInputRef = createRef();
     const PasswordcheckInputRef = createRef();
+
+    const load = async() => {
+        try {
+            const Email = await AsyncStorage.getItem('Email')
+            setEmail(Email)
+            console.log(name)
+          } catch (e) {
+          }
+      }
+
+      useEffect(()=>{
+            load()
+        }, [])  
 
     const handleSubmitPress = () => {
         setErrortext('');
@@ -23,7 +38,23 @@ export default function ChangePWScreen ({navigation}) {
             setErrortext('비밀번호가 일치하지 않습니다');
             return;
         }
-        setLoading(true);
+        fetch(preURL.preURL +'/account', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify({
+                "email": email,
+                "password": Password,
+            }),
+        }).then((response) => response.json())
+        .then((response) => {  
+            console.log(response)
+            navigation.reset({routes: [{name: "SettingScreen"}]})
+        }).catch((err) => {
+            console.log("error", err)
+        })
         }
 
     return (

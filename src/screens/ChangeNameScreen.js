@@ -1,26 +1,76 @@
-import React, { useState, createRef } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState, useEffect, createRef } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, TextInput, Keyboard} from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { theme } from '../styles/theme';
+import Loader from '../components/Loader';
 
 export default function ChangeNameScreen ({navigation}) {
     const preURL = require('../preURL');
-    const [Name, setName] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState();
     const [errortext, setErrortext] = useState('');
 
     const nameInputRef = createRef();
 
-    const handleSubmitPress = () => {
+    const load = async() => {
+        try {
+            const Email = await AsyncStorage.getItem('Email')
+            setEmail(Email)
+            fetch(preURL.preURL + '/account?email=' + Email)
+            .then((response) => {
+            return response.json()
+            }).then((response)=>{
+            setName(response.name);
+            })
+            .catch((err) => {
+                console.log("error", err) 
+            });
+            try{
+                await AsyncStorage.setItem("Name", name)
+            } catch (e) {}
+            }catch(error){
+                console.log(error)
+            }
+      }
+
+      const storeData = async() =>{
+        try{
+           await AsyncStorage.setItem("Name", name)
+        }catch(error){
+            console.log(error)
+        }
+      }
+
+      useEffect(()=>{
+            load()
+        }, [])  
+
+    const handleSubmitPress = async() => {
         setErrortext('');
-        if (!Name) {
+        if (!name) {
             setErrortext('이름을 입력해주세요');
             return;
         }
-        setLoading(true);
-        }
-
+        fetch(preURL.preURL +'/account', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify({
+                "email": email,
+                "name": name,
+            }),
+        }).then((response) => response.json())
+        .then((response) => {  
+            console.log(response)
+            storeData()
+            navigation.reset({routes: [{name: "SettingScreen"}]})
+        }).catch((err) => {
+            console.log("error", err)
+        })
+    }
     return (
         <View style={styles.container}>
             <View style={styles.settingBox}>
@@ -30,7 +80,8 @@ export default function ChangeNameScreen ({navigation}) {
                         <TextInput
                             style={styles.textform}
                             placeholder={'이름'}
-                            onChangeText={(Name) => setName(Name)}
+                            defaultValue={name}
+                            onChangeText={(name) => setName(name)}
                             ref={nameInputRef}
                             returnKeyType="next"
                             onSubmitEditing={Keyboard.dismiss}

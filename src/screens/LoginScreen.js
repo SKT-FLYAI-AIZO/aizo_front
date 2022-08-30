@@ -16,13 +16,13 @@ const LoginScreen = ({navigation}) => {
 
   const passwordInputRef = React.createRef();
 
-  const storeData = async ()=>{
+  const storeData = async() =>{
     try{
        await AsyncStorage.setItem("Email", Email)
     }catch(error){
         console.log(error)
     }
-}
+  }
 
   const handleSubmitPress = () => {
     setErrortext('')
@@ -49,7 +49,7 @@ const LoginScreen = ({navigation}) => {
       .then((response) => { 
           setLoading(false)
           if (Object.values(response)[0] === 'login success'){
-            navigation.reset({routes: [{name: "Auth"}]})
+            navigation.reset({routes: [{name: "MainTab"}]})
             storeData()
             navigation.navigate('MainTab')
           } else if(Object.values(response)[0] === "비밀번호를 확인해주세요."){

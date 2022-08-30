@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Linking } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Linking, Image } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { theme } from '../styles/theme';
@@ -17,38 +17,67 @@ export default function SettingScreen({navigation}) {
   };
   const _Logout = () => {
     AsyncStorage.clear();
-    navigation.reset({routes: [{name: "MainTab"}]})
+    navigation.reset({routes: [{name: "ListScreen"}]})
     navigation.navigate('Auth')
   };
 
+  const _Delete = async() => {
+    console.log(email)
+    fetch(preURL.preURL + '/account?email=' + email,{
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8'
+      },
+      }).then((response) => response.json())
+      .then((response) => {  
+        console.log(response.message)
+        if(response.message === `Account email '${email}' deleted!`){
+          AsyncStorage.clear()
+          navigation.reset({routes: [{name: "ListScreen"}]})
+          navigation.reset({routes: [{name: "Auth"}]})
+          navigation.navigate('Auth')
+        }
+      }).catch((err) => {
+          console.log("error", err)
+      })
+  };
+
   const load = async() => {
-    try {
-      const Email = await AsyncStorage.getItem('Email')
-      fetch(preURL.preURL + '/account?email=' + Email)
-    .then((response) => {
-      return response.json()
-    }).then((response)=>{
-      console.log(response.name);
-      setName(response.name);
-      console.log(name);
-    })
-    .catch((err) => {
-        console.log("error", err) 
-    });
-    } catch (e) {
-    }
+      try{
+        await AsyncStorage.setItem("Name", name)
+      } catch (e) {}
   }
       
   useEffect(() => {
+    setLoading(true)
+    AsyncStorage.getItem('Email', (err, result) => {
+      console.log(result);
+      setEmail(result);
+      fetch(preURL.preURL + '/account?email=' + result)
+        .then((response) => {
+          return response.json()
+        }).then((response)=>{
+          setEmail(result)
+          setName(response.name);
+          setLoading(false)
+        })
+        .catch((err) => {
+            console.log("error", err) 
+      });
     load()
+    })
   }, [])
-
 
   return (
     <View style={styles.container}>
-      <View style={styles.settingBox}>
+      <Loader loading={loading} />
+      {!loading ? (<View style={styles.settingBox}>
         <View style={styles.contentBox}>
-            <Text style={styles.ContentText}> {name}님</Text> 
+            <View style={styles.Row}>
+              <View style={{flex: 1.5, alignItems: 'center'}}><Image source={require('../assets/images/Drive.png')} style={{width: wp(10), height: wp(10), resizeMode: 'contain'}}/></View>
+              <View style={{flex: 8.5, alignItems: 'flex-start'}}><Text style={styles.ContentText}>{name}님</Text></View>
+            </View>
         </View> 
         <View>
           <Text style = {styles.title}>사용자 설정</Text>
@@ -89,12 +118,12 @@ export default function SettingScreen({navigation}) {
           </View>
           </View>
           <View style={styles.contentBox}>
-          <TouchableOpacity style={styles.Row}>
+          <TouchableOpacity style={styles.Row} onPress={_Delete}>
               <View style={{flex: 8, alignItems: 'flex-start'}}><Text style = {styles.ContentText}> 회원 탈퇴 </Text></View>
               <View style={{flex: 1.5, alignItems: 'center'}} />
             </TouchableOpacity>
           </View>
-        </View>
+        </View>) : (<View style={{flex:1}} />)}
     </View>
   );
 }
