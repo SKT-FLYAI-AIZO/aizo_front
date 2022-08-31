@@ -12,10 +12,11 @@ import { useIsFocused } from '@react-navigation/native';
 
 let foregroundSubscription = null
 let starttime = 0
+let gpsSet = []
 
 export default function App() {
   const cameraRef = useRef();
-  let gpsSet = []
+  const [email, setEmail] = useState();
   const preURL = require('../preURL');
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasMicrophonePermission, setHasMicrophonePermission] = useState();
@@ -37,6 +38,11 @@ export default function App() {
 
       setHasCameraPermission(cameraPermission.status === "granted");
       setHasMicrophonePermission(microphonePermission.status === "granted");
+      try {
+        const Email = await AsyncStorage.getItem('Email')
+        setEmail(Email)
+      } catch (e) {
+      }
     })();
   }, []);
 
@@ -61,7 +67,7 @@ foregroundSubscription =
          timeInterval: 1000,
          distanceInterval: 0
          }, location => {
-            gpsSet.push({"time": (location.timestamp - starttime).toFixed(4),  "lat": location.coords['latitude'].toFixed(4), "long": location.coords['longitude'].toFixed(4)})
+            gpsSet.push({"time": (location.timestamp - starttime).toFixed(4),  "lat": location.coords['latitude'].toFixed(4), "lon": location.coords['longitude'].toFixed(4)})
     })
   }
   const runGPS= () => {
@@ -113,13 +119,19 @@ foregroundSubscription =
       "data": gpsSet
     }
     let sendTime = new Date(starttime)
-    RNFetchBlob.fetch('POST', preURL.preURL + '/storage/video-uploader', {
+    console.log(videoSource)
+    console.log(String(sendTime.toISOString()))
+    console.log(String(email))
+    console.log(JSON.stringify(locationSet))
+    RNFetchBlob
+    .config({ timeout: 1000000 })
+    .fetch('POST', preURL.preURL + '/storage/video-uploader', {
         'Accept': 'application/json',
         'Content-Type' : 'multipart/form-data',
       }, [
-        { name : 'video_file', filename: AsyncStorage.getItem('Email') + sendTime.toISOString() + ".mp4", type: "video/mp4", data: RNFetchBlob.wrap(videoSource)},
+        { name : 'video_file', filename: email + sendTime.toISOString() + ".mp4", type: "video/mp4", data: RNFetchBlob.wrap(videoSource)},
         { name : 'date', data : String(sendTime.toISOString())},
-        { name : 'email', data : String(AsyncStorage.getItem('Email'))},
+        { name : 'email', data : String(email)},
         { name : 'loc', data : JSON.stringify(locationSet)},
       ]).then((response) => response.text())
       .then((responseJson) => { 

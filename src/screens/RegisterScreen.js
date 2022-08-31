@@ -54,7 +54,8 @@ const RegisterScreen = ({navigation}) => {
               setLoading(false)
               console.log(Object.values(response)[0] === "Account Created!")
               if(Object.values(response)[0] === "Account Created!"){
-                navigation.goBack()
+                navigation.reset({routes: [{name: "Auth"}]})
+                navigation.navigate("InitialScreen")
                 alert('회원 가입이 완료되었습니다.')
               } else if(Object.values(response)[0][0] === "account의 email은/는 이미 존재합니다."){
                 setErrortext('이미 가입된 이메일입니다.')

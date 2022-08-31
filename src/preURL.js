@@ -1,3 +1,3 @@
 module.exports = {
-  preURL: 'https://aizo-api.azurewebsites.net',
+  preURL: 'https://aizo-api-staging.azurewebsites.net',
 };
