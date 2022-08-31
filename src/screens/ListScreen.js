@@ -10,17 +10,20 @@ import RNFS from 'react-native-fs';
 import RNFetchBlob from "rn-fetch-blob";
 
 const state = {
-  tableHead: ['  이름', '발생일', '발생위치', '  다운로드']}
+  tableHead: ['이름', '발생일', '발생위치', '다운로드']}
 
 const element = (navigation, cellData, rowData) => (
     <TouchableOpacity
             style={{
               backgroundColor:'white',
               borderRaduis: 50,
+              
             }}
             onPress={() => navigation.push('VideoScreen', {rowData})}
         >
-        <Text style={{textDecorationLine:'underline'}}>  {cellData}</Text>
+        <Text numberOfLines = {2} 
+        ellipsizeMode='tail' 
+        style={{textDecorationLine:'underline',color:'black', fontSize:11}}>{cellData}</Text>
     </TouchableOpacity>
 );
 
@@ -83,7 +86,7 @@ export default function App({navigation}) {
           notification : true,
           mime: "text/plain",
           path:  videoDir + `/사고영상.mp4`,
-          description : 'Downloading image.'
+          description : 'Downloading Video'
         }
       }
 
@@ -98,15 +101,16 @@ export default function App({navigation}) {
       await fetch(preURL.preURL + '/media/video'+'?email='+ email)
         .then(response => response.json())
         .then(response => {
-          console.log(response)
+          console.log(response.data)
           const data = response.data
           const len = data.length;
           const inputData = []
           for (let i = 0; i < len; i++) {
-            const title = "영상" + (i + 1);
             const date = data[i]['date'].slice(2,4) + '.' + data[i]['date'].slice(5,7) + "." + data[i]['date'].slice(8,10);
             const location = data[i]['location'];
             const path = data[i]['path'];
+            const title = path.slice(55);
+            console.log(path.slice(55))
             inputData.push([title, date, location, path]);
           }
           setTableData(inputData)
@@ -152,7 +156,7 @@ export default function App({navigation}) {
                           backgroundColor:'white',
                           margin: 10,
                           borderRaduis: 50,
-                          alignItems:'center'
+                          alignItems:'center',
                         }}
 
 
@@ -167,7 +171,7 @@ export default function App({navigation}) {
                         <Ionicons name="cloud-download" size={30} color='gray'/>
                       </TouchableOpacity>
                       : cellData
-                    } textStyle={styles.text}/>
+                    } textStyle={styles.text} numberOfLines={2}/>
                   ))
                 }
               </TableWrapper>
@@ -197,7 +201,8 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 30,
-    fontWeight: "300"
+    fontWeight: "300",
+    color:'black'
   },
 
   databox:{
@@ -214,9 +219,9 @@ const styles = StyleSheet.create({
   },
 
   // 테이블
-  head: { height: 40, backgroundColor: '#fff', borderBottomWidth: 1, },
+  head: { height: 40, backgroundColor: '#fff', borderBottomWidth: 1, textAlign:'center'},
   row: { flexDirection: 'row', backgroundColor: '#fff', borderBottomWidth: 1, justifyContent: 'center', padding:5},
   btn: { width: 70, height: 18, backgroundColor: '#fff',  borderRadius: 2 },
   btnText: { textAlign: 'center', color: '#fff', backgroundColor: '#000' },
-  text: { margin: 6, },
+  text: { margin: 6, color:'black', textAlign:'center', fontSize:12,},
 });

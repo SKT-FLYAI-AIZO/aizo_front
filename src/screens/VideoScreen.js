@@ -105,12 +105,12 @@ export default function App({navigation, route}) {
               isLooping/> */}
           </View>
               <View style={{flexDirection: 'row', flex:1}}>
-                  <View style={{flex:1, borderWidth:1, borderColor:'gray', backgroundColor:'white', justifyContent:'center', alignItems:'center',}}>
+                  {/* <View style={{flex:1,borderTopWidth:0.7, backgroundColor:'white', justifyContent:'center', alignItems:'center',}}>
                       <TouchableOpacity onPress={()=>{}}
                         hitSlop={{ top: 32, bottom: 32, left: 32, right: 32 }}>
                         <Text style={styles.text2}>삭제</Text>
                       </TouchableOpacity>
-                  </View>
+                  </View> */}
                   <View style={{flex:1, backgroundColor:theme.purple, justifyContent:'center', alignItems:'center',}}>
                       <TouchableOpacity onPress={()=>{
                         checkPermission();

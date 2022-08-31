@@ -14,6 +14,7 @@ import ListScreen from './screens/ListScreen';
 import VideoScreen from './screens/VideoScreen';
 import SettingScreen from './screens/SettingScreen';
 import NoticeScreen from './screens/NoticeScreen';
+import GuideScreen from './screens/GuideScreen';
 import { theme } from './styles/theme';
 
 const Stack = createStackNavigator();
@@ -36,7 +37,7 @@ function ListStackScreen(navigation) {
             <TouchableOpacity onPress={() => navigation.navigate('NoticeScreen')}>
               <View style={styles.badgeIconView}>
                 <View style={styles.badge} />
-                <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
+                <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} color="gray" />
               </View>
             </TouchableOpacity>  
           ),
@@ -81,6 +82,7 @@ function ListStackScreen(navigation) {
             </TouchableOpacity>  
           ),
         })}/>
+      
     </ListStack.Navigator>
   );
 }
@@ -111,7 +113,7 @@ function SettingStackScreen()  {
             <TouchableOpacity onPress={() => navigation.navigate('NoticeScreen')}>
               <View style={styles.badgeIconView}>
                 <View style={styles.badge} />
-                <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} />
+                <Ionicons name="notifications-outline" size={Dimensions.get('window').width * 0.07} color='gray' />
               </View>
             </TouchableOpacity>  
           ),
@@ -135,6 +137,7 @@ function SettingStackScreen()  {
             </TouchableOpacity>  
           ),
         })}/>
+        <SettingStack.Screen name="GuideScreen" component={GuideScreen} />
     </SettingStack.Navigator>
   );
 }
