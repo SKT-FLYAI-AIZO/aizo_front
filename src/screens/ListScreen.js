@@ -140,19 +140,18 @@ export default function App({navigation}) {
                               console.log(filePath);
                               checkPermission()
                               const { config, fs } = RNFetchBlob
-                            let PictureDir = fs.dirs.DownloadDir  // this is the pictures directory. You can check the available directories in the wiki.
-                            console.log(PictureDir)
-                            let options = {
-                              fileCache: true,
-                              addAndroidDownloads : {
-                                
-                                useDownloadManager : true, // setting it to true will use the device's native download manager and will be shown in the notification bar.
-                                notification : true,
-                                path:  PictureDir + `/사고영상.mp4`,
-                                // this is the path where your downloaded file will live in
-                                description : 'Downloading Video.'
+                              let videoDir = fs.dirs.DownloadDir  // this is the pictures directory. You can check the available directories in the wiki.
+                              let options = {
+                                fileCache: true,
+                                addAndroidDownloads : {
+
+                                  useDownloadManager : true, // setting it to true will use the device's native download manager and will be shown in the notification bar.
+                                  notification : true,
+                                  path: videoDir +  '/' + route.params.rowData[0],
+                                  // this is the path where your downloaded file will live in
+                                  description : 'Downloading Video.'
+                                }
                               }
-                            }
                             config(options)
                             .fetch('GET', cellData
                             )
