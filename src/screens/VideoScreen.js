@@ -51,7 +51,7 @@ export default function App({navigation, route}) {
           useDownloadManager : true, 
           notification : true,
           mime: "text/plain",
-          path:  videoDir + route.params.rowData[0],
+          path:  videoDir +  '/' + route.params.rowData[0],
           description : 'Downloading video.'
         }
       }
