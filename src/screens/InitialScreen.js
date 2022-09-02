@@ -28,8 +28,8 @@ const InitialScreen = ({navigation}) => {
                 <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')}>
                 <Text style={textstyle(theme.white, 20).style}>회원가입</Text>
             </TouchableOpacity>
-                <TouchableOpacity>
-                <Text style={textstyle(theme.grey, 20).style}>사용방법</Text>
+                <TouchableOpacity onPress={()=>{navigation.navigate('GuideScreen')}}>
+                <Text style={textstyle(theme.grey, 20).style}>이용방법</Text>
             </TouchableOpacity>
       </View>
         </View>

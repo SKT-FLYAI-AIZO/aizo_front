@@ -103,7 +103,7 @@ export default function SettingScreen({navigation}) {
         <View>
           <Text style = {styles.title}>서비스 이용</Text>
           <View style={styles.contentBox}>
-          <TouchableOpacity style={styles.Row}>
+          <TouchableOpacity style={styles.Row} onPress={()=>{navigation.navigate('GuideScreen')}}>
               <View style={{flex: 8, alignItems: 'flex-start'}}><Text style = {styles.ContentText}> 이용 방법 </Text></View>
               <View style={{flex: 1.5, alignItems: 'center'}}>
                 <Ionicons name="chevron-forward" color="grey" size={wp(6)}/>

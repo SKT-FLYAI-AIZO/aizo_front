@@ -7,6 +7,8 @@ install! 'cocoapods', :deterministic_uuids => false
 
 target 'SKT' do
   use_expo_modules!
+  pod 'react-native-orientation', :path => '../node_modules/react-native-orientation'
+
   post_integrate do |installer|
     begin
       expo_patch_react_imports!(installer)

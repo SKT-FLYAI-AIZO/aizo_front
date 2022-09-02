@@ -17,7 +17,11 @@ import NoticeScreen from './screens/NoticeScreen';
 import ChangeNameScreen from './screens/ChangeNameScreen';
 import ChangePwScreen from './screens/ChangePwScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from '@react-navigation/native';
+import FlashMessage from 'react-native-flash-message';
+import GuideScreen from './screens/GuideScreen';
 import { theme } from './styles/theme';
+import Orientation from 'react-native-orientation'; 
 
 const Stack = createStackNavigator();
 const ListStack = createStackNavigator();
@@ -28,6 +32,7 @@ const Tab = createBottomTabNavigator();
 function ListStackScreen(navigation) {
   const [Alarm, setAlarm] = useState(false);
   const preURL = require('./preURL');
+  const isFocused = useIsFocused();
 
   useEffect(()=>{
     AsyncStorage.getItem('Email', (err, result) => {
@@ -39,7 +44,8 @@ function ListStackScreen(navigation) {
       })
       .catch(err => console.error(err))
     });
-  }, [])
+  }, [isFocused])
+
   return (
     <ListStack.Navigator>
       <ListStack.Screen name="ListScreen" component={ListScreen} options={({ navigation }) => ({
@@ -59,11 +65,12 @@ function ListStackScreen(navigation) {
           ),
         })}
         />
-        <ListStack.Screen name="VideoScreen" component={VideoScreen} options={({ navigation }) => ({
-          title: '영상',
+        <ListStack.Screen name="VideoScreen" component={VideoScreen} options={({ navigation, route }) => ({
+          title: route.params.rowData[0],
           headerTitleAlign: 'center',
           headerTitleStyle: {
-            fontSize: wp(7),
+            marginLeft: 10,
+            fontSize: hp(2),
           },
           headerBackTitleVisible: false,
           headerStyle: {
@@ -113,6 +120,8 @@ function RecordStackScreen()  {
 function SettingStackScreen()  {
   const [Alarm, setAlarm] = useState(false);
   const preURL = require('./preURL');
+  const isFocused = useIsFocused();
+  
 
   useEffect(()=>{
     AsyncStorage.getItem('Email', (err, result) => {
@@ -123,7 +132,9 @@ function SettingStackScreen()  {
       })
       .catch(err => console.error(err))
     });
-  }, [])
+
+}, [isFocused])
+  
   return (
     <SettingStack.Navigator>
       <SettingStack.Screen name="SettingScreen" component={SettingScreen} options={({ navigation }) => ({
@@ -187,6 +198,7 @@ function SettingStackScreen()  {
             height: Dimensions.get('window').width * 0.15
           },
         })}/>
+        <SettingStack.Screen name="GuideScreen" component={GuideScreen} options={{ title: '이용 방법' }}/>
     </SettingStack.Navigator>
   );
 }
@@ -207,7 +219,7 @@ const MainTabScreen = ({navigation, route}) => {
             }else{
               iconName = focused ? 'videocam' : 'videocam-outline';
             }
-            return <Ionicons name={iconName} size={35} color={color} />;
+            return <Ionicons name={iconName} size={Dimensions.get('window').height * 0.045} color={color} />;
           },
           tabBarActiveTintColor: theme.purple,
           tabBarInactiveTintColor: 'gray',
@@ -254,6 +266,11 @@ function Auth() {
           headerBackTitleVisible: false,
         }}
       />
+      <Stack.Screen
+        name="GuideScreen"
+        component={GuideScreen}
+        options={{ title: '이용 방법' }}
+      />
     </Stack.Navigator>
   );
 };
@@ -278,6 +295,7 @@ export default function App() {
           options={{headerShown: false}}
         />
       </Stack.Navigator>
+      <FlashMessage position="top" />
     </NavigationContainer>
   );
 };

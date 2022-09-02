@@ -4,6 +4,7 @@ import 'react-native-gesture-handler';
 import Loader from '../components/Loader';
 import { theme } from '../styles/theme';
 import {StyleSheet, View, Text, Image, TouchableOpacity, TextInput, Keyboard} from 'react-native';
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 const RegisterScreen = ({navigation}) => {
     const preURL = require('../preURL');
@@ -54,9 +55,12 @@ const RegisterScreen = ({navigation}) => {
               setLoading(false)
               console.log(Object.values(response)[0] === "Account Created!")
               if(Object.values(response)[0] === "Account Created!"){
+                showMessage({
+                  message: "회원 가입이 완료되었습니다.",
+                  type: "success",
+                });
                 navigation.reset({routes: [{name: "Auth"}]})
                 navigation.navigate("InitialScreen")
-                alert('회원 가입이 완료되었습니다.')
               } else if(Object.values(response)[0][0] === "account의 email은/는 이미 존재합니다."){
                 setErrortext('이미 가입된 이메일입니다.')
               }

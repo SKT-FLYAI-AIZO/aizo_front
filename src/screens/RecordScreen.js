@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useEffect, useState, useRef } from 'react';
 import { Camera } from 'expo-camera';
 import { Video } from 'expo-av';
@@ -9,6 +10,8 @@ import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNFetchBlob from 'rn-fetch-blob'
 import { useIsFocused } from '@react-navigation/native';
+import { showMessage, hideMessage } from "react-native-flash-message";
+import Orientation from 'react-native-orientation';
 
 let foregroundSubscription = null
 let starttime = 0
@@ -105,6 +108,7 @@ foregroundSubscription =
       setIsPreview(false);
       setIsVideoRecording(false);
       cameraRef.current.stopRecording();
+      Orientation.lockToPortrait();
   };
 }
 
@@ -112,13 +116,15 @@ foregroundSubscription =
     await cameraRef.current.resumePreview();
     setIsPreview(false);
     setVideoSource(null);
+    Orientation.unlockAllOrientations()
   };
 
   const shareVideo = async() => {
     let locationSet = {
       "data": gpsSet
     }
-    let sendTime = new Date(starttime)
+    let sendTime = new Date(starttime + 32400000)
+    //let sendTime = new Date(starttime).toLocaleString({timeZone: "Asia/Seoul"})
     console.log(videoSource)
     console.log(String(sendTime.toISOString()))
     console.log(String(email))
@@ -136,8 +142,23 @@ foregroundSubscription =
       ]).then((response) => response.text())
       .then((responseJson) => { 
         const resposeJson2 = responseJson.length ? JSON.parse(responseJson) : {};
-        console.log("SEND_SMS RESULT: ", resposeJson2);
-    })
+        console.log(resposeJson2)
+        if(resposeJson2.message === "Detected video save success!"){
+          showMessage({
+            message: "영상에 위반 장면이 포함되어 신고 영상이 저장되었습니다.",
+            type: "success",
+          })
+        } else if (resposeJson2.message === "There is no detected video!"){
+          showMessage({
+            message: "영상에 위반 장면이 포함되지 않았습니다.",
+            type: "success",
+          })
+        }else{
+        showMessage({
+          message: "오류",
+          type: "warning",
+        })
+    }})
       .catch((err) => {
         console.log("error", err)
       })
@@ -188,25 +209,25 @@ foregroundSubscription =
         <View
           style={{
             borderWidth: 2,
-            borderRadius: (Dimensions.get('window').width * 0.15)/2,
+            borderRadius: hp(8)/2,
             borderColor: "white",
-            height: Dimensions.get('window').width * 0.15,
-            width: Dimensions.get('window').width * 0.15,
+            height: hp(8),
+            width: hp(8),
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             }}
         >
           {isVideoRecording ? ( 
-            <Ionicons name="stop" size={Dimensions.get('window').width * 0.1} color={theme.red} />
+            <Ionicons name="stop" size={hp(4)} color={theme.red} />
             ) : (
               <View
               style={{
                 borderWidth: 2,
-                borderRadius: (Dimensions.get('window').width * 0.15 - 10) / 2,
+                borderRadius: hp(4) / 2,
                 borderColor: theme.red,
-                height: Dimensions.get('window').width * 0.15 - 10,
-                width: Dimensions.get('window').width * 0.15 - 10,
+                height: hp(4),
+                width: hp(4),
                 backgroundColor: theme.red,
               }}/>
           )}

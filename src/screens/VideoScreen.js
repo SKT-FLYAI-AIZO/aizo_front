@@ -3,6 +3,7 @@ import { View, StyleSheet, Button, PermissionsAndroid, Text,TouchableOpacity} fr
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { Video, AVPlaybackStatus } from 'expo-av';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import RNFetchBlob from 'rn-fetch-blob'
 import { theme } from '../styles/theme';
 
 export default function App({navigation, route}) {
@@ -17,14 +18,49 @@ export default function App({navigation, route}) {
     setLocation(route.params.rowData[2]);
     setPath(route.params.rowData[3]);
   })
-  const downloadPress = () => {
-    fetch(preURL.preURL + '/media/file?path=' + path)
-      .then((response) => response.json())
-      .then((response) => { 
-          console.log(response.status);
-      }).catch((err) => {
-          console.log("error", Object.values(err)) 
-      })
+  
+  const checkPermission = async () => {
+    if (Platform.OS === 'ios') {
+      console.log('I dont like ios')
+    } else {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: 'Storage Permission Required',
+            message: 'App needs access to your storage'
+          }
+        )
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('Storage Permission Granted.')
+          //download()
+        } else {
+          alert('Storage Permission Not Granted')
+        } 
+        } catch (err) {
+          console.warn(err);
+        }
+      }
+    }
+    const downloadByRNFB = async (cellData)=>{
+      const { config, fs } = RNFetchBlob
+      let videoDir = fs.dirs.DownloadDir 
+      let options = {
+        fileCache: true,
+        addAndroidDownloads : {
+          useDownloadManager : true, 
+          notification : true,
+          mime: "text/plain",
+          path:  videoDir + route.params.rowData[0],
+          description : 'Downloading video.'
+        }
+      }
+
+      await config(options)
+      .fetch('GET', cellData)
+      .then((res) => { 
+        console.log('download Success');
+      }).catch((err) => {console.log(err)})
     }
 
   return (
@@ -48,13 +84,10 @@ export default function App({navigation, route}) {
           />
           </View>
               <View style={{flexDirection: 'row', flex:1}}>
-                  <View style={{flex:1, borderWidth:1, borderColor:'gray', backgroundColor:'white', justifyContent:'center', alignItems:'center',}}>
-                      <TouchableOpacity onPress={()=>{}}>
-                        <Text style={styles.text2}>삭제</Text>
-                      </TouchableOpacity>
-                  </View>
                   <View style={{flex:1, backgroundColor:theme.purple, justifyContent:'center', alignItems:'center',}}>
-                      <TouchableOpacity onPress={()=>{}}>
+                      <TouchableOpacity onPress={()=>{ 
+                        checkPermission();
+                        downloadByRNFB(path);}}>
                         <Text style={styles.text1}>다운로드</Text>
                       </TouchableOpacity>
                   </View>

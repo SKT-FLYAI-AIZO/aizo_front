@@ -5,6 +5,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useIsFocused } from '@react-navigation/native';
 import Loader from '../components/Loader';
 import RNFetchBlob from 'rn-fetch-blob'
 
@@ -19,8 +20,11 @@ const element = (navigation, cellData, rowData) => (
             }}
             onPress={() => navigation.push('VideoScreen', {rowData})}
         >
-        <Text style={{textDecorationLine:'underline'}}>  {cellData}</Text>
+        <Text numberOfLines = {2} 
+        ellipsizeMode='tail' 
+        style={{textDecorationLine:'underline',color:'black', fontSize:11}}>{cellData}</Text>
     </TouchableOpacity>
+
 );
 
 export default function App({navigation}) {
@@ -29,6 +33,8 @@ export default function App({navigation}) {
   const [email, setEmail] = useState('');
   const [filePath, setFilePath] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const isFocused = useIsFocused();
 
   const checkPermission = async () => {
     if (Platform.OS === 'ios') {
@@ -60,36 +66,39 @@ export default function App({navigation}) {
       console.log(result);
       setEmail(result);
       fetch(preURL.preURL + '/media/video'+'?email='+ result)
-        .then(response => response.json())
+      .then((response) => {
+        if (response.status===204){
+          console.log('no videos')
+          return null;
+        } else{
+          return response.json()
+        }
+      })
         .then(response => {
-          console.log(response)
+          if (response===null) {
+            setTableData([]);
+            setLoading(false)
+          } else {
+          console.log(response.data)
           const data = response.data
           const len = data.length;
           const inputData = []
           for (let i = 0; i < len; i++) {
-            const title = "영상" + (i + 1);
             const date = data[i]['date'].slice(2,4) + '.' + data[i]['date'].slice(5,7) + "." + data[i]['date'].slice(8,10);
             const location = data[i]['location'];
             const path = data[i]['path'];
+            const title = path.slice(55);
+            console.log(path.slice(55))
             inputData.push([title, date, location, path]);
           }
           setTableData(inputData)
           setLoading(false)
+        }
         })
         .catch(err => console.error(err));
     })
-      }, [])
-    
-    const downloadPress = () => {
-      RNFS.downloadFile({
-        fromUrl: preURL.preURL + '/media/file'+'?path=' + path,
-        toFile: LOCAL_PATH_TO_VIDEO,
-      }).then((res) => {
-        console.log('successful video download!')
-      }).catch((err) => {
-        console.error(err.message, err.code)
-      })
-    }
+      }, [isFocused])
+
     
     return (
     <View style={styles.container}>
@@ -139,12 +148,13 @@ export default function App({navigation}) {
                                 
                                 useDownloadManager : true, // setting it to true will use the device's native download manager and will be shown in the notification bar.
                                 notification : true,
-                                path:  PictureDir + "/me_.mp4", // this is the path where your downloaded file will live in
-                                description : 'Downloading image.'
+                                path:  PictureDir + `/사고영상.mp4`,
+                                // this is the path where your downloaded file will live in
+                                description : 'Downloading Video.'
                               }
                             }
                             config(options)
-                            .fetch('GET', "https://aizostorage.blob.core.windows.net/aizo-source/tester1@naver.com_2022-08-26.mp4"
+                            .fetch('GET', cellData
                             )
                             .then((res) => { 
                               console.log(res.status);
@@ -160,7 +170,7 @@ export default function App({navigation}) {
                         <Ionicons name="cloud-download" size={30} color='gray'/>
                       </TouchableOpacity>
                       : cellData
-                    } textStyle={styles.text}/>
+                    } textStyle={styles.text} numberOfLines={2}/>
                   ))
                 }
               </TableWrapper>
